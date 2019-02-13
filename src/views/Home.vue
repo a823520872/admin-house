@@ -1,32 +1,50 @@
 <template>
-    <el-container class="index">
-        <el-aside>
-            <el-menu default-active="2" mode="horizontal" background-color="#545c64">
-                <el-menu-item>
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">导航仪</span>
-                </el-menu-item>
-            </el-menu>
-        </el-aside>
-        <el-container>
-            <el-header>
-
-            </el-header>
-            <el-main>
-
-            </el-main>
-        </el-container>
-    </el-container>
+	<el-container class="index">
+		<el-aside>
+			<aside-menu></aside-menu>
+		</el-aside>
+		<el-container>
+			<el-header></el-header>
+			<el-main>
+				<router-view />
+			</el-main>
+		</el-container>
+	</el-container>
 </template>
 
 <script>
-
-export default {
-};
+	import AsideMenu from '../components/Menu.vue';
+	export default {
+		components: {
+			AsideMenu
+		}
+	};
 </script>
 
 <style lang="less">
-.index {
-    height: 100%;
-}
+	.index {
+	    height: 100%;
+	    .el-container {
+	        background-color: #f2f2f2;
+	    }
+	    .el-aside {
+	        padding-top: 60px;
+	        background-color: #545c64;
+	    }
+	    .el-menu {
+	        border: none;
+
+	        a {
+	            text-decoration: none;
+	            color: inherit;
+	        }
+	    }
+	    .el-header {
+	        background-color: #fff;
+	    }
+	    .el-main {
+	        margin: 15px;
+	        background-color: #fff;
+	    }
+	}
 </style>
