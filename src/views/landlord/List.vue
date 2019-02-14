@@ -132,7 +132,9 @@
 				});
 			},
 			handleEdit(item) {
-				this.$router.push(`/landlord/${item.id}`);
+				if (item.id) {
+					this.$router.push(`/landlord/${item.id}`);
+				}
 			},
 			handleDel(item) {
 				console.log(item);

@@ -14,3 +14,8 @@ body,
 .search + .table {
     margin-top: 20px;
 }
+
+.action-box {
+    width: 732px;
+    margin: 0 auto;
+}
