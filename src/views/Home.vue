@@ -3,8 +3,8 @@
 		<el-aside>
 			<aside-menu></aside-menu>
 		</el-aside>
-		<el-container>
-			<el-header></el-header>
+		<el-container direction="vertical">
+			<top-header></top-header>
 			<el-main>
 				<router-view />
 			</el-main>
@@ -14,9 +14,11 @@
 
 <script>
 	import AsideMenu from '../components/Menu.vue';
+	import TopHeader from '../components/Hd.vue';
 	export default {
 		components: {
-			AsideMenu
+			AsideMenu,
+			TopHeader
 		}
 	};
 </script>
