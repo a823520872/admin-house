@@ -74,7 +74,7 @@
                                    type="warning"
                                    @click="handleCheck(scope.row)">审核</el-button>
                         <el-button size="small"
-                                   @click="handleEdit(scope.row)">编辑</el-button>
+                                   v-link="`/house/${scope.row.id}`">编辑</el-button>
                         <el-button size="small"
                                    type="danger"
                                    @click="handleDel(scope.row)">删除</el-button>
