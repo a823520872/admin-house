@@ -1,34 +1,21 @@
 <template>
     <div class="action-box">
-        <el-form
-            ref="form"
-            :rules="rules"
-            label-width="80px"
-        >
-            <el-form-item label="姓名">
-                <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号">
-                <el-input v-model="form.mobile"></el-input>
-            </el-form-item>
-            <el-form-item label="房源数量">
-                <el-input v-model.number="form.num"></el-input>
-            </el-form-item>
+        <el-form ref="form" :rules="rules" label-width="80px">
+            <el-form-item label="姓名"><el-input v-model="form.name"></el-input></el-form-item>
+            <el-form-item label="手机号"><el-input v-model="form.mobile"></el-input></el-form-item>
+            <el-form-item label="房源数量"><el-input v-model.number="form.num"></el-input></el-form-item>
             <el-form-item label="房源位置">
                 <el-cascader
                     expand-trigger="hover"
                     :options="options"
                     v-model="selectedOptions2"
                     @change="handleChange"
-                >
-                </el-cascader>
+                ></el-cascader>
             </el-form-item>
             <el-form-item label="到期时间">
-                <el-date-picker
-                    type="date"
-                    v-model="form.timeline"
-                ></el-date-picker>
+                <el-date-picker type="date" v-model="form.timeline"></el-date-picker>
             </el-form-item>
+            <el-form-item label="推荐人"><el-input v-model="form.mobile"></el-input></el-form-item>
             <el-form-item label="推荐人">
                 <el-input v-model="form.recommender"></el-input>
             </el-form-item>
