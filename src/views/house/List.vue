@@ -2,8 +2,12 @@
     <div>
         <div class="search el-row--flex is-justify-space-between">
             <el-form :inline="true">
-                <el-form-item><el-input v-model="form.name" placeholder="房东姓名"></el-input></el-form-item>
-                <el-form-item><el-input v-model="form.name" placeholder="区域"></el-input></el-form-item>
+                <el-form-item>
+                    <el-input v-model="form.name" placeholder="房东姓名"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="form.name" placeholder="区域"></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-select v-model="form.status" placeholder="状态">
                         <el-option label="上架" :value="1"></el-option>
@@ -11,18 +15,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-date-picker
-                        v-model="timerange"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerOptions"
-                    ></el-date-picker>
+                    <el-date-picker v-model="timerange" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
-                <el-form-item><el-button type="primary" @click="handleSubmit">搜索</el-button></el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleSubmit">搜索</el-button>
+                </el-form-item>
             </el-form>
         </div>
         <div class="table">
@@ -39,14 +36,9 @@
                 <el-table-column prop="name" label="申请时间" width="120"></el-table-column>
                 <el-table-column width="240">
                     <template slot-scope="scope">
-                        <el-button size="small"
-                                   type="warning"
-                                   @click="handleCheck(scope.row)">审核</el-button>
-                        <el-button size="small"
-                                   v-link="`/house/${scope.row.id}`">编辑</el-button>
-                        <el-button size="small"
-                                   type="danger"
-                                   @click="handleDel(scope.row)">删除</el-button>
+                        <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
+                        <el-button size="small" v-link="`/house/${scope.row.id}`">编辑</el-button>
+                        <el-button size="small" type="danger" @click="handleDel(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>

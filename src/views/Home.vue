@@ -1,9 +1,13 @@
 <template>
     <el-container class="index">
-        <el-aside><aside-menu></aside-menu></el-aside>
+        <el-aside>
+            <aside-menu></aside-menu>
+        </el-aside>
         <el-container direction="vertical">
             <top-header></top-header>
-            <el-main><router-view /></el-main>
+            <el-main>
+                <router-view />
+            </el-main>
         </el-container>
     </el-container>
 </template>

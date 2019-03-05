@@ -2,9 +2,15 @@
     <el-card class="login">
         <div slot="header">后台管理系统</div>
         <el-form :model="form">
-            <el-form-item label="用户名"><el-input v-model="form.name"></el-input></el-form-item>
-            <el-form-item label="用户名"><el-input v-model="form.pass" type="password"></el-input></el-form-item>
-            <el-form-item><el-button type="primary" @click="handleClick">登录</el-button></el-form-item>
+            <el-form-item label="用户名">
+                <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="用户名">
+                <el-input v-model="form.pass" type="password"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="handleClick">登录</el-button>
+            </el-form-item>
         </el-form>
     </el-card>
 </template>

@@ -1,5 +1,5 @@
 {
-    "printWidth": 120,
+    "printWidth": 150,
     "semi": true,
     "tabWidth": 4,
     "useTabs": false,
@@ -7,6 +7,7 @@
     "trailingComma": "none",
     "bracketSpacing": true,
     "htmlWhitespaceSensitivity": "ignore",
+    "proseWrap": "always",
     "parsers": {
         ".jsx": "flow",
         ".scss": "scss",
