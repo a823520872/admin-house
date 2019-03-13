@@ -11,6 +11,13 @@ const routes = new Router({
         {
             path: '/',
             component: Home,
+            beforeEnter(to, from, next) {
+                if (localStorage.getItem('tk')) {
+                    next();
+                } else {
+                    next('/login');
+                }
+            },
             children: [
                 {
                     path: 'landlord',
@@ -47,7 +54,14 @@ const routes = new Router({
         {
             path: '/login',
             name: 'login',
-            component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
+            component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
+            beforeEnter(to, from, next) {
+                if (localStorage.getItem('tk')) {
+                    next('/');
+                } else {
+                    next();
+                }
+            }
         }
     ]
 });

@@ -1,15 +1,15 @@
 <template>
     <el-card class="login">
         <div slot="header">后台管理系统</div>
-        <el-form :model="form">
+        <el-form :model="form" :rules="rules" ref="loginForm" label-width="80px">
             <el-form-item label="用户名">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="form.account" @submit.native="handleClick('loginForm')"></el-input>
             </el-form-item>
-            <el-form-item label="用户名">
-                <el-input v-model="form.pass" type="password"></el-input>
+            <el-form-item label="密码">
+                <el-input v-model="form.password" type="password" @submit.native="handleClick('loginForm')"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="handleClick">登录</el-button>
+                <el-button type="primary" class="btn_login" @click.native="handleClick('loginForm')">登录</el-button>
             </el-form-item>
         </el-form>
     </el-card>
@@ -20,14 +20,24 @@ export default {
     data() {
         return {
             form: {
-                name: '',
-                pass: ''
+                account: '',
+                password: ''
+            },
+            rules: {
+                account: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+                password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
             }
         };
     },
     methods: {
-        handleClick() {
-            this.$router.replace('/');
+        handleClick(name) {
+            this.$refs[name].validate(valid => {
+                if (!valid) return;
+                this.$request.user.login(this.form).then(res => {
+                    console.log(res);
+                    this.$router.replace('/');
+                });
+            });
         }
     }
 };
@@ -39,7 +49,7 @@ export default {
     top: 50%;
     left: 50%;
     width: 400px;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -100%);
     background-color: #fff;
 
     .el-card__header {

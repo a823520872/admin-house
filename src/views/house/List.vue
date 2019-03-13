@@ -24,16 +24,23 @@
         </div>
         <div class="table">
             <el-table :data="data" stripe>
-                <el-table-column type="index" label="序号" width="50"></el-table-column>
-                <el-table-column prop="name" label="姓名" width="80"></el-table-column>
-                <el-table-column prop="phone" label="手机号" width="120"></el-table-column>
-                <el-table-column prop="name" label="推荐人" width="120"></el-table-column>
-                <el-table-column prop="name" label="房源数量" width="80"></el-table-column>
-                <el-table-column prop="name" label="发布数量" width="80"></el-table-column>
-                <el-table-column prop="name" label="房源位置"></el-table-column>
-                <el-table-column prop="name" label="状态" width="80"></el-table-column>
-                <el-table-column prop="name" label="状态" width="80"></el-table-column>
-                <el-table-column prop="name" label="申请时间" width="120"></el-table-column>
+                <el-table-column prop="id" label="序号" width="50"></el-table-column>
+                <el-table-column prop="landlord_id" label="房东" width="80"></el-table-column>
+                <el-table-column prop="contact_mobile" label="手机号" width="120"></el-table-column>
+                <el-table-column prop="house_type" label="房型" width="120"></el-table-column>
+                <el-table-column prop="rental" label="租金" width="80"></el-table-column>
+                <el-table-column label="房源区域">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.address_street}}</span>
+                        <span>{{scope.row.address_flag}}</span>
+                        <span>{{scope.row.address_detail}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="name" label="具体位置" width="80"></el-table-column>
+                <el-table-column prop="create_t" label="发布时间" width="80"></el-table-column>
+                <el-table-column prop="name" label="真实阅读量" width="80"></el-table-column>
+                <el-table-column prop="is_booked" label="获取联系方式" width="120"></el-table-column>
+                <el-table-column prop="is_rented" label="租房状态" width="120"></el-table-column>
                 <el-table-column width="240">
                     <template slot-scope="scope">
                         <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
@@ -42,11 +49,15 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="pagination">
+                <el-pagination @current-change="getData" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
     data() {
         return {
@@ -55,27 +66,24 @@ export default {
                     {
                         text: '最近一周',
                         onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            const end = dayjs();
+                            const start = dayjs().subtract(7, 'days');
                             picker.$emit('pick', [start, end]);
                         }
                     },
                     {
                         text: '最近一个月',
                         onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            const end = dayjs();
+                            const start = dayjs().subtract(1, 'months');
                             picker.$emit('pick', [start, end]);
                         }
                     },
                     {
                         text: '最近三个月',
                         onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            const end = dayjs();
+                            const start = dayjs().subtract(3, 'months');
                             picker.$emit('pick', [start, end]);
                         }
                     }
@@ -86,29 +94,35 @@ export default {
                 name: '',
                 status: ''
             },
-            page: 1,
-            count: 0,
-            data: [
-                {
-                    name: '江建华',
-                    phone: '13123456789'
-                },
-                {
-                    name: '娇娇',
-                    phone: '13123456789'
-                },
-                {
-                    name: '依然',
-                    phone: '13123456789'
-                }
-            ]
+            pageParams: {
+                page: 1,
+                pageSize: 20,
+                count: 0
+            },
+            data: null
         };
     },
     mounted() {
         this.$nextTick(this.getData);
     },
     methods: {
-        getData() {},
+        getData() {
+            this.$request.house
+                .list({
+                    page: this.pageParams.page,
+                    page_size: this.pageParams.pageSize,
+                    ...this.form
+                })
+                .then(res => {
+                    const { data: { count, data, page } } = res
+                    this.pageParams.page = +page
+                    this.pageParams.count = +count
+                    this.data = data.map(item => {
+                        item.create_t = dayjs(new Date(item.createtime * 1000)).format('YYYY-MM-DD HH:mm:ss');
+                        return item
+                    })
+                });
+        },
         handleSubmit() {
             this.getData(1);
         },
@@ -144,5 +158,3 @@ export default {
     }
 };
 </script>
-
-<style></style>

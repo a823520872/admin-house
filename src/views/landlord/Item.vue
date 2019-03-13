@@ -60,7 +60,7 @@ export default {
         }
     },
     methods: {
-        getData() {},
+        getData() { },
         back() {
             this.$router.go(-1);
         },
@@ -74,5 +74,3 @@ export default {
     }
 };
 </script>
-
-<style></style>

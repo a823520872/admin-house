@@ -25,18 +25,25 @@
                 <el-button type="primary" v-link="`/landlord/add`">添加房东</el-button>
             </div>
         </div>
-        <div class="table">
+        <div class="table" v-if="data">
             <el-table :data="data" stripe>
-                <el-table-column type="index" label="序号" width="50"></el-table-column>
+                <el-table-column prop="id" label="序号" width="50"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="80"></el-table-column>
-                <el-table-column prop="phone" label="手机号" width="120"></el-table-column>
+                <el-table-column prop="referrer_user_mobile" label="手机号" width="120"></el-table-column>
                 <el-table-column prop="name" label="推荐人" width="120"></el-table-column>
-                <el-table-column prop="name" label="房源数量" width="80"></el-table-column>
+                <el-table-column prop="house_num" label="房源数量" width="80"></el-table-column>
                 <el-table-column prop="name" label="发布数量" width="80"></el-table-column>
-                <el-table-column prop="name" label="房源位置"></el-table-column>
-                <el-table-column prop="name" label="状态" width="80"></el-table-column>
-                <el-table-column prop="name" label="状态" width="80"></el-table-column>
-                <el-table-column prop="name" label="申请时间" width="120"></el-table-column>
+                <el-table-column label="房源位置">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.position_province}}</span>
+                        <span>{{scope.row.position_city}}</span>
+                        <span>{{scope.row.postion_district}}</span>
+                        <span>{{scope.row.postion_street}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="status" label="状态" width="80"></el-table-column>
+                <el-table-column prop="remarks" label="备注" width="80"></el-table-column>
+                <el-table-column prop="create_t" label="申请时间" width="120"></el-table-column>
                 <el-table-column width="240">
                     <template slot-scope="scope">
                         <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
@@ -45,11 +52,15 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="pagination">
+                <el-pagination @current-change="getData" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
     data() {
         return {
@@ -62,20 +73,7 @@ export default {
                 pageSize: 20,
                 count: 0
             },
-            data: [
-                {
-                    name: '江建华',
-                    phone: '13123456789'
-                },
-                {
-                    name: '娇娇',
-                    phone: '13123456789'
-                },
-                {
-                    name: '依然',
-                    phone: '13123456789'
-                }
-            ]
+            data: null
         };
     },
     mounted() {
@@ -86,10 +84,18 @@ export default {
             this.$request.landlord
                 .list({
                     page: this.pageParams.page,
-                    pageSize: this.pageParams.pageSize,
+                    page_size: this.pageParams.pageSize,
                     ...this.form
                 })
-                .then(() => {});
+                .then(res => {
+                    const { data: { count, data, page } } = res
+                    this.pageParams.page = +page
+                    this.pageParams.count = +count
+                    this.data = data.map(item => {
+                        item.create_t = dayjs(new Date(item.createtime * 1000)).format('YYYY-MM-DD HH:mm:ss');
+                        return item
+                    })
+                });
         },
         handleSubmit() {
             this.pageParams.page = 1;
@@ -131,5 +137,3 @@ export default {
     }
 };
 </script>
-
-<style></style>
