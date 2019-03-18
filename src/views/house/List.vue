@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 export default {
     data() {
         return {
@@ -114,13 +114,15 @@ export default {
                     ...this.form
                 })
                 .then(res => {
-                    const { data: { count, data, page } } = res
-                    this.pageParams.page = +page
-                    this.pageParams.count = +count
+                    const {
+                        data: { count, data, page }
+                    } = res;
+                    this.pageParams.page = +page;
+                    this.pageParams.count = +count;
                     this.data = data.map(item => {
                         item.create_t = dayjs(new Date(item.createtime * 1000)).format('YYYY-MM-DD HH:mm:ss');
-                        return item
-                    })
+                        return item;
+                    });
                 });
         },
         handleSubmit() {

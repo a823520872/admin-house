@@ -1,6 +1,6 @@
 <template>
     <el-card class="login">
-        <div slot="header">后台管理系统</div>
+        <div slot="header">村里租房管理系统</div>
         <el-form :model="form" :rules="rules" ref="loginForm" label-width="80px">
             <el-form-item label="用户名">
                 <el-input v-model="form.account" @submit.native="handleClick('loginForm')"></el-input>

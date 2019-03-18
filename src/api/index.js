@@ -21,6 +21,9 @@ export default {
         },
         del(params) {
             return ajax('/api/admin/landlord/del', params, { type: 'post' });
+        },
+        check(params) {
+            return ajax('/api/admin/Landlord/audit', params, { type: 'post' });
         }
     },
     house: {
