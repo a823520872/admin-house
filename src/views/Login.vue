@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
     data() {
         return {
@@ -30,12 +31,16 @@ export default {
         };
     },
     methods: {
+        ...mapMutations(['setUserInfo']),
         handleClick(name) {
             this.$refs[name].validate(valid => {
                 if (!valid) return;
                 this.$request.user.login(this.form).then(res => {
-                    console.log(res);
-                    this.$router.replace('/');
+                    if (res && res.data && res.data.userinfo) {
+                        this.setUserInfo(res.data.userinfo);
+                        localStorage.setItem('tk', res.data.userinfo.token);
+                        this.$router.replace('/');
+                    }
                 });
             });
         }

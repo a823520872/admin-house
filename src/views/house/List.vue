@@ -3,13 +3,13 @@
         <div class="search el-row--flex is-justify-space-between">
             <el-form :inline="true">
                 <el-form-item>
-                    <el-input v-model="form.name" placeholder="房东姓名"></el-input>
+                    <el-input v-model="params.name" placeholder="房东姓名"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="form.name" placeholder="区域"></el-input>
+                    <el-input v-model="params.name" placeholder="区域"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="form.status" placeholder="状态">
+                    <el-select v-model="params.status" placeholder="状态">
                         <el-option label="上架" :value="1"></el-option>
                         <el-option label="下架" :value="2"></el-option>
                     </el-select>
@@ -90,7 +90,7 @@ export default {
                 ]
             },
             timerange: [],
-            form: {
+            params: {
                 name: '',
                 status: ''
             },
@@ -111,7 +111,7 @@ export default {
                 .list({
                     page: this.pageParams.page,
                     page_size: this.pageParams.pageSize,
-                    ...this.form
+                    ...this.params
                 })
                 .then(res => {
                     const {

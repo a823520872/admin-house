@@ -42,5 +42,10 @@ export default {
         del(params) {
             return ajax('/api/admin/house_resource/del', params, { type: 'post' });
         }
+    },
+    addr: {
+        area(params) {
+            return ajax('/api/area/getAllList', params);
+        }
     }
 };
