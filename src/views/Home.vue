@@ -1,6 +1,9 @@
 <template>
     <el-container class="index">
         <el-aside>
+            <div class="logo">
+                <router-link to="/">村里租房</router-link>
+            </div>
             <aside-menu></aside-menu>
         </el-aside>
         <el-container direction="vertical">
@@ -30,8 +33,17 @@ export default {
         background-color: #f2f2f2;
     }
     .el-aside {
-        padding-top: 60px;
+        // padding-top: 60px;
         background-color: #545c64;
+    }
+    .logo {
+        width: 280px;
+        height: 60px;
+        padding-left: 20px;
+        line-height: 60px;
+        // text-align: center;
+        font-size: 32px;
+        color: #fff;
     }
     .el-menu {
         border: none;

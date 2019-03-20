@@ -45,7 +45,59 @@ export default {
     },
     addr: {
         area(params) {
-            return ajax('/api/area/getAllList', params);
+            return new Promise((resolve, reject) => {
+                resolve({
+                    code: 0,
+                    msg: '请求成功',
+                    data: [
+                        {
+                            id: 1965,
+                            name: '广州市',
+                            first: 'G',
+                            pinyin: 'guangzhou',
+                            level: 2,
+                            active: true,
+                            children: [
+                                {
+                                    id: 1969,
+                                    name: '天河区',
+                                    first: 'T',
+                                    pinyin: 'tianhe',
+                                    level: 3,
+                                    active: true,
+                                    children: [
+                                        {
+                                            id: 3749,
+                                            name: '上社',
+                                            first: 'S',
+                                            level: 4,
+                                            active: true
+                                        },
+                                        {
+                                            id: 3750,
+                                            name: '棠东',
+                                            first: 'T',
+                                            level: 4,
+                                            active: false
+                                        },
+                                        {
+                                            id: 3751,
+                                            name: '棠下',
+                                            first: 'T',
+                                            level: 4,
+                                            active: false
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                });
+            });
+            // return ajax('/api/area/getAllList', params);
+        },
+        flag(params) {
+            return ajax('/api/area_flag/getAllList', params, { type: 'get' });
         }
     }
 };

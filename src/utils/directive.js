@@ -17,5 +17,12 @@ export default {
                 });
             }
         });
+        Vue.directive('back', {
+            bind(el) {
+                el.addEventListener('click', () => {
+                    router.go(-1);
+                });
+            }
+        });
     }
 };

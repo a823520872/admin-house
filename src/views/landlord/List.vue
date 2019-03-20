@@ -41,7 +41,7 @@
                         <span>{{scope.row.postion_street}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="status" label="状态" width="80"></el-table-column>
+                <el-table-column prop="status_remain_days" label="状态" width="80"></el-table-column>
                 <el-table-column prop="remarks" label="备注" width="80"></el-table-column>
                 <el-table-column prop="create_t" label="申请时间" width="120"></el-table-column>
                 <el-table-column width="240">
@@ -56,10 +56,16 @@
                 <el-pagination @current-change="getData" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
             </div>
         </div>
-        <el-dialog title="审核" :visible.sync="dialogVisible" width="360px">
+        <el-dialog title="审核" :visible.sync="dialogVisible" width="480px">
             <el-form :model="form" :rule="ruleForm" ref="form">
-                <el-form-item label="生效时间" :label-width="" prop="">
-
+                <el-form-item label="审核状态" label-width="80px">
+                    <el-switch v-model="form.is_audit"></el-switch>
+                </el-form-item>
+                <el-form-item label="生效时间" label-width="80px" prop="indate_begin">
+                    <el-date-picker v-model="timerange" @change="timePicker" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" :default-time="['00:00:00', '23:59:59']"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="备注" label-width="80px" prop="remarks">
+                    <el-input v-model="form.remarks" type="textarea" :rows="3"></el-input>
                 </el-form-item>
             </el-form>
             <div class="dialog-footer" slot="footer">
@@ -75,6 +81,42 @@ import dayjs from 'dayjs';
 export default {
     data() {
         return {
+            pickerOptions: {
+                shortcuts: [
+                    {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const start = dayjs();
+                            const end = dayjs().add(1, 'months');
+                            picker.$emit('pick', [start, end]);
+                        }
+                    },
+                    {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const start = dayjs();
+                            const end = dayjs().add(3, 'months');
+                            picker.$emit('pick', [start, end]);
+                        }
+                    },
+                    {
+                        text: '最近半年',
+                        onClick(picker) {
+                            const start = dayjs();
+                            const end = dayjs().add(6, 'months');
+                            picker.$emit('pick', [start, end]);
+                        }
+                    },
+                    {
+                        text: '最近一年',
+                        onClick(picker) {
+                            const start = dayjs();
+                            const end = dayjs().add(1, 'years');
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }
+                ]
+            },
             params: {
                 name: '',
                 status: ''
@@ -88,8 +130,13 @@ export default {
             dialogVisible: false,
             ruleForm: {},
             form: {
-                id: ''
-            }
+                id: '',
+                indate_begin: '',
+                indate_end: '',
+                is_audit: false,
+                remarks: ''
+            },
+            timerange: []
         };
     },
     mounted() {
@@ -122,7 +169,11 @@ export default {
         },
         handleCheck(item) {
             this.form = {
-                id: item.id
+                id: item.id,
+                indate_begin: '',
+                indate_end: '',
+                is_audit: false,
+                remarks: ''
             };
             this.dialogVisible = true;
         },
@@ -131,15 +182,25 @@ export default {
             this.dialogVisible = false;
         },
         check(name) {
-            this.$request.landlord.check({}).then(res => {
-                this.$message({
-                    type: 'success',
-                    message: '操作成功!'
+            this.$refs[name].validate(valid => {
+                if (!valid) return;
+                const data = { ...this.form, is_audit: this.form.is_audit ? 1 : 2 };
+                this.$request.landlord.check(data).then(res => {
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                    });
+                    this.cancelCheck(name);
+                    this.data = [];
+                    this.getData();
                 });
             });
         },
+        timePicker(e) {
+            this.form.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');
+            this.form.indate_end = dayjs(e[1].$d).format('YYYY-MM-DD');
+        },
         handleDel(item) {
-            console.log(item);
             this.$confirm('确认删除该条信息？', '提示', {
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',
