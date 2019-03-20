@@ -99,5 +99,8 @@ export default {
         flag(params) {
             return ajax('/api/area_flag/getAllList', params, { type: 'get' });
         }
+    },
+    config(params) {
+        return ajax('/api/keyvalue/getAllList', params, { type: 'get' });
     }
 };

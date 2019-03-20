@@ -1,12 +1,12 @@
 <template>
     <el-card class="login">
         <div slot="header">村里租房管理系统</div>
-        <el-form :model="form" :rules="rules" ref="loginForm" label-width="80px">
+        <el-form :model="form" :rules="rules" ref="loginForm" label-width="80px" @keydown.enter.native="handleClick('loginForm')">
             <el-form-item label="用户名">
                 <el-input v-model="form.account" @submit.native="handleClick('loginForm')"></el-input>
             </el-form-item>
             <el-form-item label="密码">
-                <el-input v-model="form.password" type="password" @submit.native="handleClick('loginForm')"></el-input>
+                <el-input v-model="form.password" type="password"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" class="btn_login" @click.native="handleClick('loginForm')">登录</el-button>

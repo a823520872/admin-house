@@ -97,7 +97,7 @@ export default {
             },
             pageParams: {
                 page: 1,
-                pageSize: 20,
+                pageSize: 10,
                 count: 0
             },
             data: null

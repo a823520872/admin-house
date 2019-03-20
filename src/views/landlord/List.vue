@@ -46,7 +46,7 @@
                 <el-table-column prop="create_t" label="申请时间" width="120"></el-table-column>
                 <el-table-column width="240">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.is_audit === 2" size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
+                        <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
                         <el-button size="small" v-link="`/landlord/${scope.row.id}`">编辑</el-button>
                         <el-button size="small" type="danger" @click="handleDel(scope.row)">删除</el-button>
                     </template>
@@ -57,14 +57,14 @@
             </div>
         </div>
         <el-dialog title="审核" :visible.sync="dialogVisible" width="480px">
-            <el-form :model="form" :rule="ruleForm" ref="form">
-                <el-form-item label="审核状态" label-width="80px">
+            <el-form :model="form" :rule="ruleForm" ref="form" label-width="80px">
+                <el-form-item label="审核状态">
                     <el-switch v-model="form.is_audit"></el-switch>
                 </el-form-item>
-                <el-form-item label="生效时间" label-width="80px" prop="indate_begin">
+                <el-form-item label="生效时间" prop="indate_begin">
                     <el-date-picker v-model="timerange" @change="timePicker" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" :default-time="['00:00:00', '23:59:59']"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="备注" label-width="80px" prop="remarks">
+                <el-form-item label="备注" prop="remarks">
                     <el-input v-model="form.remarks" type="textarea" :rows="3"></el-input>
                 </el-form-item>
             </el-form>
@@ -123,7 +123,7 @@ export default {
             },
             pageParams: {
                 page: 1,
-                pageSize: 20,
+                pageSize: 10,
                 count: 0
             },
             data: null,
