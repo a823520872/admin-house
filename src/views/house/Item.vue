@@ -258,7 +258,11 @@ export default {
             this.$refs[name].validate(valid => {
                 if (!valid) return;
                 let url = this.id ? 'edit' : 'add';
-                const data = this.id ? { ...this.form, id: this.id } : { ...this.form };
+                const data = {
+                    ...this.form,
+                    config_base_ids: this.form.config_base_ids.join(','),
+                    config_lightspot_ids: this.form.config_lightspot_ids.join(',')
+                };
                 this.$request.house[url](data).then(res => {
                     this.$message({ showClose: true, message: '操作成功', type: 'success', duration: 5000 });
                     this.back();
