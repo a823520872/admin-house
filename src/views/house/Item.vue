@@ -46,7 +46,7 @@
                 <el-input v-model.number="form.virtual_number"></el-input>
             </el-form-item>
             <el-form-item label="真实阅读量">
-                <el-input v-model.number="form.raal_number"></el-input>
+                <el-input v-model.number="form.real_number"></el-input>
             </el-form-item>
             <el-form-item label="发布状态">
                 <el-radio-group v-model="form.is_public">
@@ -133,7 +133,7 @@ export default {
                 // config_lightspot: '',
                 supplement: '',
                 virtual_number: '',
-                raal_number: '',
+                real_number: '',
                 is_public: 2,
                 remarks: ''
             },
@@ -259,7 +259,7 @@ export default {
                 if (!valid) return;
                 let url = this.id ? 'edit' : 'add';
                 const data = this.id ? { ...this.form, id: this.id } : { ...this.form };
-                this.$request.landlord[url](data).then(res => {
+                this.$request.house[url](data).then(res => {
                     this.$message({ showClose: true, message: '操作成功', type: 'success', duration: 5000 });
                     this.back();
                 });
