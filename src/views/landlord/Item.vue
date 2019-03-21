@@ -10,7 +10,7 @@
             <!-- <el-form-item label="房源数量">
                 <el-input v-model.number="form.num" prop="num"></el-input>
             </el-form-item> -->
-            <el-form-item label="房源位置">
+            <el-form-item label="房源位置" v-if="addr">
                 <el-cascader expand-trigger="hover" prop="postion_street" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
             </el-form-item>
             <el-form-item label="到期时间">
@@ -18,6 +18,9 @@
             </el-form-item>
             <el-form-item label="推荐人">
                 <el-input v-model="form.referrer_user_mobile"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remarks">
+                <el-input v-model="form.remarks" type="textarea" :rows="3"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button v-back>返回</el-button>
@@ -89,12 +92,11 @@ export default {
                 postion_street: '',
                 indate_begin: '',
                 indate_end: '',
-                referrer_user_mobile: ''
+                referrer_user_mobile: '',
+                remarks: ''
             },
             id: '',
-            addr: [],
             selectedOptions: [],
-            addrList: null,
             timerange: []
         };
     },
@@ -117,55 +119,10 @@ export default {
                             this.form[key] = res.data[key];
                         });
                         this.timerange = [res.data.indate_begin, res.data.indate_end];
+                        // res.data.position_province_id,
+                        this.selectedOptions = [res.data.position_city_id, res.data.postion_district_id, res.data.postion_street_id];
                     }
                 });
-        },
-        back() {
-            this.$router.go(-1);
-        },
-        getArea() {
-            this.$request.addr.area().then(res => {
-                if (res.data) {
-                    this.addrList = {};
-                    this.addr = res.data
-                        ? res.data.map(item => {
-                              this.addrList[item.id] = item.name;
-                              if (item.children) {
-                                  const ichildren = item.children.map(it => {
-                                      this.addrList[it.id] = it.name;
-                                      if (it.children) {
-                                          const jchildren = it.children.map(i => {
-                                              this.addrList[i.id] = i.name;
-                                              return {
-                                                  value: i.id,
-                                                  label: i.name
-                                              };
-                                          });
-                                          return {
-                                              value: it.id,
-                                              label: it.name,
-                                              children: jchildren
-                                          };
-                                      }
-                                      return {
-                                          value: it.id,
-                                          label: it.name
-                                      };
-                                  });
-                                  return {
-                                      value: item.id,
-                                      label: item.name,
-                                      children: ichildren
-                                  };
-                              }
-                              return {
-                                  value: item.id,
-                                  label: item.name
-                              };
-                          })
-                        : [];
-                }
-            });
         },
         handleChange(e) {
             this.form.position_province_id = 1964;

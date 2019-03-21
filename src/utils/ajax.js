@@ -1,4 +1,5 @@
 import axios from 'axios';
+import router from '../router.js';
 import store from '../store.js';
 import { MessageBox } from 'element-ui';
 const isPro = process.env.NODE_ENV === 'production';
@@ -27,11 +28,16 @@ function Ajax(url, params, cfg) {
             res => {
                 store.commit('setLoading', true);
                 console.log('请求成功', url, res);
-                if (res.code) {
+                if (res.code && res.code === 1) {
                     resolve(res);
                 } else {
-                    MessageBox(res.msg, '服务异常', 'warning');
-                    reject({ msg: res.msg });
+                    if (res.code === 401) {
+                        localStorage.clear();
+                        router.replace('/login');
+                    } else {
+                        MessageBox(res.msg, '服务异常', 'warning');
+                        reject({ msg: res.msg });
+                    }
                 }
             },
             e => {

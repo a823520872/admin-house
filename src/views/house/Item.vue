@@ -1,16 +1,6 @@
 <template>
     <div class="action-box">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-            <!-- <el-form-item label="姓名">
-                <el-input v-model="landlord.name">
-                    <el-button slot="append" @tap="looking('name')">查找房东</el-button>
-                </el-input>
-            </el-form-item>
-            <el-form-item label="手机号">
-                <el-input v-model="landlord.mobile">
-                    <el-button slot="append" @tap="looking('mobile')">查找房东</el-button>
-                </el-input>
-            </el-form-item> -->
             <el-form-item label="房型">
                 <el-select v-model="form.house_type" prop="house_type_id" @change="selectChange('house_type', $event)">
                     <el-option v-for="li in config.house_type" :key="li.value" :value="li.label" :label="li.label"></el-option>
@@ -21,8 +11,13 @@
                     <span slot="append">元</span>
                 </el-input>
             </el-form-item>
-            <el-form-item label="房源位置">
+            <el-form-item label="房源位置" v-if="addr">
                 <el-cascader expand-trigger="hover" prop="postion_street" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
+            </el-form-item>
+            <el-form-item label="标志建筑">
+                <el-select v-model="form.address_flag" prop="address_flag_id" @change="selectChange('address_flag', $event)">
+                    <el-option v-for="li in config.address_flag" :key="li.value" :value="li.label" :label="li.label"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="具体位置">
                 <el-input v-model="form.address_detail"></el-input>
@@ -31,6 +26,27 @@
                 <el-select v-model="form.road_distance" prop="road_distance_id" @change="selectChange('road_distance', $event)">
                     <el-option v-for="li in config.road_distance" :key="li.value" :value="li.label" :label="li.label"></el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="楼层">
+                <el-select v-model="form.floor_number" prop="floor_number" @change="selectChange('floor', $event)">
+                    <el-option v-for="li in config.floor" :key="li.value" :value="li.label" :label="li.label"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="房源图片">
+                <el-row v-if="form.images && form.images.length" :gutter="10">
+                    <el-col :span="7" v-for="(li, i) in form.images" :key="i">
+                        <div class="avatar">
+                            <a :href="li.url" target="_blank" rel="noopener noreferrer">
+                                <img :src="li.url" alt="">
+                            </a>
+                            <el-button class="close" type="text" @click="delImg(i)"><span>&times;</span></el-button>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-upload class="avatar-uploader" drag multiple :action="uploadUrl" :show-file-list="false" :before-upload="beforeImgUpload">
+                    <!-- <img v-if="image" :src="imageUrl" class="avatar"> -->
+                    <i class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
             </el-form-item>
             <el-form-item label="基础设施">
                 <el-checkbox-group v-model="form.config_base_ids">
@@ -104,11 +120,13 @@ export default {
                 ]
             },
             rules: {
-                name: [{ required: true, message: '请输入房东姓名', trigger: 'blur' }],
-                mobile: [{ required: true, message: '请输入手机号码', trigger: 'blur' }],
-                num: [{ required: true, message: '请输入房源数量', trigger: 'blur' }],
-                postion_street: [{ required: true, message: '请选择房源地址', trigger: 'change' }],
-                indate_end: [{ required: true, message: '请选择到期时间', trigger: 'change' }]
+                rental: [{ required: true, message: '请输入租金', trigger: 'blur' }],
+                address_street: [{ required: true, message: '请选择房源地址', trigger: 'change' }],
+                address_flag: [{ required: true, message: '请选择标志建筑', trigger: 'blur' }],
+                road_distance: [{ required: true, message: '请选择路边距离', trigger: 'blur' }],
+                house_type: [{ required: true, message: '请选择房型', trigger: 'blur' }],
+                floor_number: [{ required: true, message: '请输入楼层', trigger: 'blur' }],
+                images: [{ type: 'array', message: '请上传图片', trigger: 'blur' }, { min: 2, message: '请至少上传2张图片', trigger: 'blur' }]
             },
             form: {
                 id: '',
@@ -145,14 +163,13 @@ export default {
             config: {
                 floor: null,
                 house_type: null,
+                address_flag: null,
                 road_distance: null,
                 config_base: null,
                 config_lightspot: null
             },
             id: '',
-            addr: [],
             selectedOptions: [],
-            addrList: null,
             timerange: []
         };
     },
@@ -181,11 +198,9 @@ export default {
                         this.form.config_lightspot_ids = res.data.config_lightspot_ids
                             ? res.data.config_lightspot_ids.split(',').map(item => +item)
                             : [];
+                        this.form.images = (res.data.image_urls ? res.data.image_urls.split(',') : []).map(item => ({ url: item }));
                     }
                 });
-        },
-        back() {
-            this.$router.go(-1);
         },
         getConfig() {
             this.$request.config().then(res => {
@@ -206,47 +221,13 @@ export default {
                 }
             });
         },
-        getArea() {
-            this.$request.addr.area().then(res => {
+        getAreaFlag(id) {
+            this.$request.addr.flag({ pid_area_street: id }).then(res => {
                 if (res.data) {
-                    this.addrList = {};
-                    this.addr = res.data
-                        ? res.data.map(item => {
-                              this.addrList[item.id] = item.name;
-                              if (item.children) {
-                                  const ichildren = item.children.map(it => {
-                                      this.addrList[it.id] = it.name;
-                                      if (it.children) {
-                                          const jchildren = it.children.map(i => {
-                                              this.addrList[i.id] = i.name;
-                                              return {
-                                                  value: i.id,
-                                                  label: i.name
-                                              };
-                                          });
-                                          return {
-                                              value: it.id,
-                                              label: it.name,
-                                              children: jchildren
-                                          };
-                                      }
-                                      return {
-                                          value: it.id,
-                                          label: it.name
-                                      };
-                                  });
-                                  return {
-                                      value: item.id,
-                                      label: item.name,
-                                      children: ichildren
-                                  };
-                              }
-                              return {
-                                  value: item.id,
-                                  label: item.name
-                              };
-                          })
-                        : [];
+                    this.config = {
+                        ...this.config,
+                        address_flag: res.data
+                    };
                 }
             });
         },
@@ -263,16 +244,70 @@ export default {
                     config_base_ids: this.form.config_base_ids.join(','),
                     config_lightspot_ids: this.form.config_lightspot_ids.join(',')
                 };
-                this.$request.house[url](data).then(res => {
+                if (this.id) {
+                    data.id = this.id;
+                }
+                this.$request.house[url](data).then(() => {
                     this.$message({ showClose: true, message: '操作成功', type: 'success', duration: 5000 });
-                    this.back();
+                    // this.back();
+                    this.getData();
                 });
             });
         },
-        looking(key) {},
+        delImg(i) {
+            this.form.images.splice(i, 1);
+        },
+        beforeImgUpload(file) {
+            if (this.form.images.length >= 9) {
+                this.$message({ showClose: true, message: '最多上传9张图片', type: 'warning', duration: 5000 });
+                return false;
+            }
+            const data = new FormData();
+            data.append('file', file);
+            this.$request.upload(data).then(res => {
+                if (res.data && res.data.url) {
+                    this.form.images.push(res.data);
+                }
+            });
+            return false;
+        },
         selectChange(key, e) {
-            this.form[`${key}_id`] = e;
+            if (key !== 'floor') {
+                this.form[`${key}_id`] = e;
+            }
         }
     }
 };
 </script>
+
+<style lang="less">
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    position: relative;
+    width: 178px;
+    height: 178px;
+    margin-bottom: 10px;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+</style>

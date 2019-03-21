@@ -6,10 +6,10 @@
                     <el-input v-model="params.name" placeholder="房东姓名"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="params.name" placeholder="推荐人"></el-input>
+                    <el-input v-model="params.referrer_user_mobile" placeholder="推荐人手机号"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-input v-model="params.name" placeholder="房源位置"></el-input>
+                <el-form-item v-if="addr">
+                    <el-cascader placeholder="房源位置" expand-trigger="hover" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="params.status" placeholder="状态">
@@ -29,13 +29,13 @@
             <el-table :data="data" stripe>
                 <el-table-column prop="id" label="序号" width="50"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="80"></el-table-column>
-                <el-table-column prop="referrer_user_mobile" label="手机号" width="120"></el-table-column>
-                <el-table-column prop="name" label="推荐人" width="120"></el-table-column>
+                <el-table-column prop="mobile" label="手机号" width="120"></el-table-column>
+                <el-table-column prop="referrer_user_mobile" label="推荐人" width="120"></el-table-column>
                 <el-table-column prop="house_num" label="房源数量" width="80"></el-table-column>
-                <el-table-column prop="name" label="发布数量" width="80"></el-table-column>
+                <el-table-column prop="house_num" label="发布数量" width="80"></el-table-column>
                 <el-table-column label="房源位置">
                     <template slot-scope="scope">
-                        <span>{{scope.row.position_province}}</span>
+                        <!-- <span>{{scope.row.position_province}}</span> -->
                         <span>{{scope.row.position_city}}</span>
                         <span>{{scope.row.postion_district}}</span>
                         <span>{{scope.row.postion_street}}</span>
@@ -58,8 +58,11 @@
         </div>
         <el-dialog title="审核" :visible.sync="dialogVisible" width="480px">
             <el-form :model="form" :rule="ruleForm" ref="form" label-width="80px">
-                <el-form-item label="审核状态">
-                    <el-switch v-model="form.is_audit"></el-switch>
+                <el-form-item label="审核">
+                    <el-radio-group v-model="form.is_audit">
+                        <el-radio :label="1">开通</el-radio>
+                        <el-radio :label="2">停止</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="生效时间" prop="indate_begin">
                     <el-date-picker v-model="timerange" @change="timePicker" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" :default-time="['00:00:00', '23:59:59']"></el-date-picker>
@@ -117,8 +120,11 @@ export default {
                     }
                 ]
             },
+            selectedOptions: [],
             params: {
                 name: '',
+                postion_street_id: '',
+                referrer_user_mobile: '',
                 status: ''
             },
             pageParams: {
@@ -133,7 +139,7 @@ export default {
                 id: '',
                 indate_begin: '',
                 indate_end: '',
-                is_audit: false,
+                is_audit: 2,
                 remarks: ''
             },
             timerange: []
@@ -161,6 +167,7 @@ export default {
                         return item;
                     });
                 });
+            this.getArea();
         },
         handleSubmit() {
             this.pageParams.page = 1;
@@ -172,7 +179,7 @@ export default {
                 id: item.id,
                 indate_begin: '',
                 indate_end: '',
-                is_audit: false,
+                is_audit: 2,
                 remarks: ''
             };
             this.dialogVisible = true;
@@ -184,7 +191,7 @@ export default {
         check(name) {
             this.$refs[name].validate(valid => {
                 if (!valid) return;
-                const data = { ...this.form, is_audit: this.form.is_audit ? 1 : 2 };
+                const data = { ...this.form };
                 this.$request.landlord.check(data).then(res => {
                     this.$message({
                         type: 'success',
@@ -195,6 +202,9 @@ export default {
                     this.getData();
                 });
             });
+        },
+        handleChange(e) {
+            this.params.postion_street_id = e[2];
         },
         timePicker(e) {
             this.form.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');

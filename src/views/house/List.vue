@@ -5,8 +5,8 @@
                 <el-form-item>
                     <el-input v-model="params.name" placeholder="房东姓名"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-cascader :options="addr" v-model="params.name" :show-all-levels="false" placeholder="区域"></el-cascader>
+                <el-form-item v-if="addr">
+                    <el-cascader placeholder="房源区域" expand-trigger="hover" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="params.status" placeholder="状态">
@@ -16,6 +16,12 @@
                 </el-form-item>
                 <el-form-item>
                     <el-date-picker v-model="timerange" @change="timePicker" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                </el-form-item>
+                <el-form-item>
+                    <el-select v-model="params.is_rented" placeholder="租房状态">
+                        <el-option label="已租" :value="1"></el-option>
+                        <el-option label="未租" :value="2"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">搜索</el-button>
@@ -36,7 +42,7 @@
                         <span>{{scope.row.address_detail}}</span> -->
                     </template>
                 </el-table-column>
-                <el-table-column prop="address_flag" label="具体位置" width="80"></el-table-column>
+                <el-table-column prop="address_detail" label="具体位置" width="80"></el-table-column>
                 <el-table-column prop="create_t" label="发布时间" width="80"></el-table-column>
                 <el-table-column prop="real_number" label="真实阅读量" width="80"></el-table-column>
                 <el-table-column prop="is_booked" label="获取联系方式" width="120"></el-table-column>
@@ -89,7 +95,7 @@ export default {
                     }
                 ]
             },
-            addr: [],
+            selectedOptions: [],
             timerange: [],
             params: {
                 name: '',
@@ -125,50 +131,7 @@ export default {
                         return item;
                     });
                 });
-        },
-        getArea() {
-            this.$request.addr.area().then(res => {
-                if (res.data) {
-                    this.addrList = {};
-                    this.addr = res.data
-                        ? res.data.map(item => {
-                              this.addrList[item.id] = item.name;
-                              if (item.children) {
-                                  const ichildren = item.children.map(it => {
-                                      this.addrList[it.id] = it.name;
-                                      if (it.children) {
-                                          const jchildren = it.children.map(i => {
-                                              this.addrList[i.id] = i.name;
-                                              return {
-                                                  value: i.id,
-                                                  label: i.name
-                                              };
-                                          });
-                                          return {
-                                              value: it.id,
-                                              label: it.name,
-                                              children: jchildren
-                                          };
-                                      }
-                                      return {
-                                          value: it.id,
-                                          label: it.name
-                                      };
-                                  });
-                                  return {
-                                      value: item.id,
-                                      label: item.name,
-                                      children: ichildren
-                                  };
-                              }
-                              return {
-                                  value: item.id,
-                                  label: item.name
-                              };
-                          })
-                        : [];
-                }
-            });
+            this.getArea();
         },
         handleSubmit() {
             this.getData(1);
@@ -206,6 +169,9 @@ export default {
                         });
                     });
             });
+        },
+        handleChange(e) {
+            this.params.postion_street_id = e[2];
         },
         timePicker(e) {
             this.params.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');

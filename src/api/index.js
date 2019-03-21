@@ -97,10 +97,13 @@ export default {
             // return ajax('/api/area/getAllList', params);
         },
         flag(params) {
-            return ajax('/api/area_flag/getAllList', params, { type: 'get' });
+            return ajax('/api/admin/area_flag/getAllList', params, { type: 'get' });
         }
     },
     config(params) {
-        return ajax('/api/keyvalue/getAllList', params, { type: 'get' });
+        return ajax('/api/admin/keyvalue/getAllList', params, { type: 'get' });
+    },
+    upload(params) {
+        return ajax('/api/upload/uploadImage', params, { type: 'post' });
     }
 };

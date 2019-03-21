@@ -2,7 +2,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'https://house.zhiqiang.ink',
+                target: 'http://house.zhiqiang.ink',
                 changeOrigin: true
             }
         }

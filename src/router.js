@@ -68,15 +68,6 @@ const routes = new Router({
                 },
                 {
                     path: 'house/:id',
-                    name: 'lanlord-edit',
-                    component: () => import(/* webpackChunkName: "house" */ './views/house/Item.vue'),
-                    beforeEnter(to, form, next) {
-                        store.commit('setMenu', '/house');
-                        next();
-                    }
-                },
-                {
-                    path: 'house/:id',
                     name: 'house-edit',
                     component: () => import(/* webpackChunkName: "house" */ './views/house/Item.vue'),
                     beforeEnter(to, form, next) {
