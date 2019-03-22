@@ -139,7 +139,7 @@ export default {
                 id: '',
                 indate_begin: '',
                 indate_end: '',
-                is_audit: 2,
+                is_audit: 1,
                 remarks: ''
             },
             timerange: []
@@ -179,14 +179,25 @@ export default {
                 id: item.id,
                 indate_begin: '',
                 indate_end: '',
-                is_audit: 2,
+                is_audit: 1,
                 remarks: ''
             };
             this.dialogVisible = true;
         },
         cancelCheck(name) {
-            this.$refs[name].resetFields();
+            this.form = {
+                id: item.id,
+                indate_begin: '',
+                indate_end: '',
+                is_audit: 1,
+                remarks: ''
+            };
             this.dialogVisible = false;
+            this.$nextTick(() => {
+                if (item.indate_begin && item.indate_end) {
+                    this.timerange = [item.indate_begin, item.indate_end];
+                }
+            });
         },
         check(name) {
             this.$refs[name].validate(valid => {
@@ -207,8 +218,8 @@ export default {
             this.params.postion_street_id = e[2];
         },
         timePicker(e) {
-            this.form.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');
-            this.form.indate_end = dayjs(e[1].$d).format('YYYY-MM-DD');
+            this.form.indate_begin = dayjs(this.timerange[0]).format('YYYY-MM-DD HH:mm:ss');
+            this.form.indate_end = dayjs(this.timerange[1]).format('YYYY-MM-DD HH:mm:ss');
         },
         handleDel(item) {
             this.$confirm('确认删除该条信息？', '提示', {

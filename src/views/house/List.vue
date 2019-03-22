@@ -31,7 +31,7 @@
         <div class="table">
             <el-table :data="data" stripe>
                 <el-table-column prop="id" label="序号" width="50"></el-table-column>
-                <el-table-column prop="landlord_id" label="房东" width="80"></el-table-column>
+                <el-table-column prop="nickname" label="房东" width="80"></el-table-column>
                 <el-table-column prop="contact_mobile" label="手机号" width="120"></el-table-column>
                 <el-table-column prop="house_type" label="房型" width="120"></el-table-column>
                 <el-table-column prop="rental" label="租金" width="80"></el-table-column>
