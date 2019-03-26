@@ -1,4 +1,4 @@
-import ajax from '../utils/ajax.js';
+import ajax from '../utils/fetch.js';
 
 export default {
     user: {
@@ -24,6 +24,9 @@ export default {
         },
         check(params) {
             return ajax('/api/admin/Landlord/audit', params, { type: 'post' });
+        },
+        getQRCode(params) {
+            return ajax('/api/admin/landlord/getQrcode', params, { type: 'post' });
         }
     },
     house: {
@@ -104,6 +107,6 @@ export default {
         return ajax('/api/admin/keyvalue/getAllList', params, { type: 'get' });
     },
     upload(params) {
-        return ajax('/api/upload/uploadImage', params, { type: 'post' });
+        return ajax('/api/upload/uploadImage', params, { type: 'post', upload: true });
     }
 };

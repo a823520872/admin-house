@@ -32,7 +32,7 @@
                 <el-table-column prop="mobile" label="手机号" width="120"></el-table-column>
                 <el-table-column prop="referrer_user_mobile" label="推荐人" width="120"></el-table-column>
                 <el-table-column prop="house_num" label="房源数量" width="80"></el-table-column>
-                <el-table-column prop="house_num" label="发布数量" width="80"></el-table-column>
+                <el-table-column prop="public_num" label="发布数量" width="80"></el-table-column>
                 <el-table-column label="房源位置">
                     <template slot-scope="scope">
                         <!-- <span>{{scope.row.position_province}}</span> -->
@@ -44,11 +44,12 @@
                 <el-table-column prop="status_remain_days" label="状态" width="80"></el-table-column>
                 <el-table-column prop="remarks" label="备注" width="80"></el-table-column>
                 <el-table-column prop="create_t" label="申请时间" width="120"></el-table-column>
-                <el-table-column width="240">
+                <el-table-column width="320">
                     <template slot-scope="scope">
                         <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
                         <el-button size="small" v-link="`/landlord/${scope.row.id}`">编辑</el-button>
                         <el-button size="small" type="danger" @click="handleDel(scope.row)">删除</el-button>
+                        <el-button size="small" type="primary" @click="handleProd(scope.row)">生成二维码</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -56,7 +57,7 @@
                 <el-pagination @current-change="getData" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
             </div>
         </div>
-        <el-dialog title="审核" :visible.sync="dialogVisible" width="480px">
+        <el-dialog title="审核" :visible.sync="dialogCheckVisible" width="480px">
             <el-form :model="form" :rule="ruleForm" ref="form" label-width="80px">
                 <el-form-item label="审核">
                     <el-radio-group v-model="form.is_audit">
@@ -74,6 +75,15 @@
             <div class="dialog-footer" slot="footer">
                 <el-button @click="cancelCheck('form')">取 消</el-button>
                 <el-button type="primary" @click="check('form')">确 定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="二维码" :visible.sync="qr" width="480px">
+            <div>
+                <img :src="qr" alt="">
+            </div>
+            <div class="dialog-footer" slot="footer">
+                <el-button @click="qr = false">取 消</el-button>
+                <el-button type="primary" @click="download">下 载</el-button>
             </div>
         </el-dialog>
     </div>
@@ -133,7 +143,7 @@ export default {
                 count: 0
             },
             data: null,
-            dialogVisible: false,
+            dialogCheckVisible: false,
             ruleForm: {},
             form: {
                 id: '',
@@ -142,7 +152,8 @@ export default {
                 is_audit: 1,
                 remarks: ''
             },
-            timerange: []
+            timerange: [],
+            qr: false
         };
     },
     mounted() {
@@ -182,22 +193,17 @@ export default {
                 is_audit: 1,
                 remarks: ''
             };
-            this.dialogVisible = true;
+            this.dialogCheckVisible = true;
         },
         cancelCheck(name) {
+            this.dialogCheckVisible = false;
             this.form = {
-                id: item.id,
+                id: '',
                 indate_begin: '',
                 indate_end: '',
                 is_audit: 1,
                 remarks: ''
             };
-            this.dialogVisible = false;
-            this.$nextTick(() => {
-                if (item.indate_begin && item.indate_end) {
-                    this.timerange = [item.indate_begin, item.indate_end];
-                }
-            });
         },
         check(name) {
             this.$refs[name].validate(valid => {
@@ -238,6 +244,20 @@ export default {
                         });
                     });
             });
+        },
+        handleProd(item) {
+            this.$request.landlord
+                .getQRCode({
+                    user_id: item.user_id
+                })
+                .then(res => {
+                    if (res && res.data) {
+                        this.qr = res.data;
+                    }
+                });
+        },
+        download() {
+            alert('暂不支持下载');
         }
     }
 };

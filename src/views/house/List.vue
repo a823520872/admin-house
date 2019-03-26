@@ -46,7 +46,11 @@
                 <el-table-column prop="create_t" label="发布时间" width="80"></el-table-column>
                 <el-table-column prop="real_number" label="真实阅读量" width="80"></el-table-column>
                 <el-table-column prop="is_booked" label="获取联系方式" width="120"></el-table-column>
-                <el-table-column prop="is_rented" label="租房状态" width="120"></el-table-column>
+                <el-table-column label="租房状态" width="120">
+                    <template slot-scope="scope">
+                        <span>{{ getRentStatus(scope.row.is_rented) }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column width="240">
                     <template slot-scope="scope">
                         <!-- <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button> -->
@@ -176,6 +180,16 @@ export default {
         timePicker(e) {
             this.params.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');
             this.params.indate_end = dayjs(e[1].$d).format('YYYY-MM-DD');
+        },
+        getRentStatus(i) {
+            switch (i) {
+                case 1:
+                    return '平台租';
+                case 2:
+                    return '自己租';
+                default:
+                    return '未租';
+            }
         }
     }
 };
