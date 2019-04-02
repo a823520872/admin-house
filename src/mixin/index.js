@@ -16,47 +16,39 @@ const mixin = {
             api.addr.area().then(res => {
                 if (res.data) {
                     this.addrList = {};
-                    this.addr = res.data
-                        ? res.data.map(item => {
-                              this.addrList[item.id] = item.name;
-                              if (item.children) {
-                                  const ichildren = item.children.map(it => {
-                                      this.addrList[it.id] = it.name;
-                                      if (it.children) {
-                                          const jchildren = it.children.map(i => {
-                                              this.addrList[i.id] = i.name;
-                                              return {
-                                                  value: i.id,
-                                                  label: i.name
-                                              };
-                                          });
-                                          return {
-                                              value: it.id,
-                                              label: it.name,
-                                              children: jchildren
-                                          };
-                                      }
-                                      return {
-                                          value: it.id,
-                                          label: it.name
-                                      };
-                                  });
-                                  return {
-                                      value: item.id,
-                                      label: item.name,
-                                      children: ichildren
-                                  };
-                              }
-                              return {
-                                  value: item.id,
-                                  label: item.name
-                              };
-                          })
-                        : [];
+                    this.addr = res.data ? getItem(res.data) : [];
                 }
             });
+        },
+        pageChange(e) {
+            this.data = [];
+            this.$router.push(`${this.$route.path}?p=${e}`);
         }
     }
 };
-
+function getItem(list) {
+    if (typeof list === 'object') {
+        if (Array.isArray(list)) {
+            return list.map(item => {
+                return getItem(item);
+            });
+        } else {
+            if (list.children && list.children.length) {
+                list.children = list.children.map(item => {
+                    return getItem(item);
+                });
+                return {
+                    value: list.id,
+                    label: list.name,
+                    children: list.children
+                };
+            } else {
+                return {
+                    value: list.id,
+                    label: list.name
+                };
+            }
+        }
+    }
+}
 export default mixin;

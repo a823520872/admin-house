@@ -1,11 +1,8 @@
 <template>
     <!-- default-active="1" -->
     <el-menu mode="vertical" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :default-active="menu" :router="true">
-        <el-menu-item index="/landlord">
-            <i class="el-icon-menu"></i>房东管理
-        </el-menu-item>
-        <el-menu-item index="/house">
-            <i class="el-icon-menu"></i>房源管理
+        <el-menu-item v-for="li in menuList" :key="li.path" :index="li.path">
+            <i class="el-icon-menu"></i>{{li.name}}
         </el-menu-item>
     </el-menu>
 </template>
@@ -14,7 +11,22 @@
 import { mapState } from 'vuex';
 export default {
     computed: {
-        ...mapState(['menu'])
+        ...mapState(['menu']),
+        active() {}
+    },
+    data() {
+        return {
+            menuList: [
+                {
+                    path: '/landlord',
+                    name: '房东管理'
+                },
+                {
+                    path: '/house',
+                    name: '房源管理'
+                }
+            ]
+        };
     }
 };
 </script>

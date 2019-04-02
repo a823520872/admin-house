@@ -199,6 +199,7 @@ export default {
                             ? res.data.config_lightspot_ids.split(',').map(item => +item)
                             : [];
                         this.form.images = (res.data.image_urls ? res.data.image_urls.split(',') : []).map(item => ({ url: item }));
+                        this.getAreaFlag();
                     }
                 });
         },
@@ -221,12 +222,17 @@ export default {
                 }
             });
         },
-        getAreaFlag(id) {
-            this.$request.addr.flag({ pid_area_street: id }).then(res => {
+        getAreaFlag() {
+            this.$request.addr.flag({ pid_area_street: this.form.address_street_id }).then(res => {
                 if (res.data) {
                     this.config = {
                         ...this.config,
-                        address_flag: res.data
+                        address_flag: res.data.map(item => {
+                            return {
+                                value: item.id,
+                                label: item.shortname
+                            };
+                        })
                     };
                 }
             });
@@ -234,6 +240,7 @@ export default {
         handleChange(e) {
             this.form.address_street_id = e[2];
             this.form.address_street = this.addrList && this.addrList[e[2]];
+            this.getAreaFlag();
         },
         submitForm(name) {
             this.$refs[name].validate(valid => {

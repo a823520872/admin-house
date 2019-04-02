@@ -14,20 +14,22 @@ function Ajax(url, params, cfg) {
         mode: 'cors'
     };
     let uri = baseURL + url;
+    const token = localStorage.getItem('tk');
     if (cfg.type === 'get') {
         uri += qs.stringify(params, true);
     } else if (cfg.type === 'post') {
         if (cfg.upload) {
             obj.body = params;
         } else {
-            // obj.headers = new Headers({
-            //     'Content-Type': 'application/json'
-            // });
             obj.headers = {
                 'Content-Type': 'application/json'
             };
             obj.body = JSON.stringify(params);
         }
+    }
+    obj.headers = obj.headers || {};
+    if (token) {
+        obj.headers.token = token;
     }
     return new Promise((resolve, reject) => {
         fetch(uri, obj)

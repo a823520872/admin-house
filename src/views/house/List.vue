@@ -35,34 +35,44 @@
                 <el-table-column prop="contact_mobile" label="手机号" width="120"></el-table-column>
                 <el-table-column prop="house_type" label="房型" width="120"></el-table-column>
                 <el-table-column prop="rental" label="租金" width="80"></el-table-column>
-                <el-table-column label="房源区域">
+                <el-table-column label="房源区域" width="80">
                     <template slot-scope="scope">
                         <span>{{scope.row.address_street}}</span>
                         <!-- <span>{{scope.row.address_flag}}</span>
                         <span>{{scope.row.address_detail}}</span> -->
                     </template>
                 </el-table-column>
-                <el-table-column prop="address_detail" label="具体位置" width="80"></el-table-column>
+                <el-table-column prop="address_detail" label="具体位置"></el-table-column>
                 <el-table-column prop="create_t" label="发布时间" width="80"></el-table-column>
                 <el-table-column prop="real_number" label="真实阅读量" width="80"></el-table-column>
-                <el-table-column prop="is_booked" label="获取联系方式" width="120"></el-table-column>
+                <el-table-column prop="getphone_number" label="获取联系方式" width="120"></el-table-column>
                 <el-table-column label="租房状态" width="120">
                     <template slot-scope="scope">
-                        <span>{{ getRentStatus(scope.row.is_rented) }}</span>
+                        <span>{{ getRentStatus(scope.row.rent_type) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column width="240">
+                <el-table-column width="280">
                     <template slot-scope="scope">
                         <!-- <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button> -->
                         <el-button size="small" v-link="`/house/${scope.row.id}`">编辑</el-button>
                         <el-button size="small" type="danger" @click="handleDel(scope.row)">删除</el-button>
+                        <el-button size="small" type="primary" @click="handleProd(scope.row)">生成二维码</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination @current-change="getData" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
+                <el-pagination @current-change="pageChange" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
             </div>
         </div>
+        <el-dialog title="海报" :visible.sync="qr" width="480px">
+            <div>
+                <img :src="qr" alt="" width="100%">
+            </div>
+            <div class="dialog-footer" slot="footer">
+                <el-button @click="qr = false">取 消</el-button>
+                <el-button type="primary" @click="download">下 载</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -110,14 +120,23 @@ export default {
                 pageSize: 10,
                 count: 0
             },
-            data: null
+            data: null,
+            qr: false
         };
+    },
+    watch: {
+        $route() {
+            this.getData();
+        }
     },
     mounted() {
         this.$nextTick(this.getData);
     },
     methods: {
         getData() {
+            if (this.$route.query && this.$route.query.p) {
+                this.pageParams.page = +this.$route.query.p;
+            }
             this.$request.house
                 .list({
                     page: this.pageParams.page,
@@ -190,6 +209,21 @@ export default {
                 default:
                     return '未租';
             }
+        },
+        handleProd(item) {
+            this.$request.house
+                .getQRCode({
+                    house_id: item.id
+                })
+                .then(res => {
+                    if (res && res.data) {
+                        this.qr = res.data;
+                    }
+                });
+        },
+        download() {
+            window.open(this.qr);
+            // alert('暂不支持下载');
         }
     }
 };

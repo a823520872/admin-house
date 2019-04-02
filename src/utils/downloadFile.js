@@ -1,3 +1,33 @@
+function downloadImage(uri, name) {
+    var image = new Image();
+    // 解决跨域 Canvas 污染问题
+    image.setAttribute('crossOrigin', 'anonymous');
+    image.onload = function() {
+        var canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        var context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, image.width, image.height);
+        var url = canvas.toDataURL('image/png');
+
+        // 生成一个a元素
+        var a = document.createElement('a');
+        // 创建一个单击事件
+        var event = new MouseEvent('click');
+
+        // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
+        a.download = name;
+        // 将生成的URL设置为a.href属性
+        a.href = url;
+
+        // 触发a的单击事件
+        a.dispatchEvent(event);
+    };
+
+    image.src = uri;
+}
+
 export function downloadFile(filename, content) {
     return new Promise((resolve, reject) => {
         if (has('ie') === 10 || isIE11() || isEdge()) {
@@ -18,7 +48,7 @@ export function downloadFile(filename, content) {
     });
 }
 
-export function base64ToBlob(code) {
+function base64ToBlob(code) {
     if (window.Blob && window.URL && window.URL.createObjectURL) {
         const URL = window.URL || window.webkitURL || window.mozURL;
 

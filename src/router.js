@@ -24,7 +24,7 @@ const routes = new Router({
                 {
                     path: 'landlord',
                     name: 'lanlord-list',
-                    component: () => import(/* webpackChunkName: "landlords" */ './views/landlord/List.vue'),
+                    component: () => import(/* webpackChunkName: "landlords.list" */ './views/landlord/List.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', to.path);
                         next();
@@ -33,7 +33,7 @@ const routes = new Router({
                 {
                     path: 'landlord/add',
                     name: 'lanlord-add',
-                    component: () => import(/* webpackChunkName: "landlord" */ './views/landlord/Item.vue'),
+                    component: () => import(/* webpackChunkName: "landlord.detail" */ './views/landlord/Item.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', '/landlord');
                         next();
@@ -42,7 +42,7 @@ const routes = new Router({
                 {
                     path: 'landlord/:id',
                     name: 'lanlord-edit',
-                    component: () => import(/* webpackChunkName: "landlord" */ './views/landlord/Item.vue'),
+                    component: () => import(/* webpackChunkName: "landlord.detail" */ './views/landlord/Item.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', '/landlord');
                         next();
@@ -51,7 +51,7 @@ const routes = new Router({
                 {
                     path: 'house',
                     name: 'house-list',
-                    component: () => import(/* webpackChunkName: "houses" */ './views/house/List.vue'),
+                    component: () => import(/* webpackChunkName: "houses.list" */ './views/house/List.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', to.path);
                         next();
@@ -60,7 +60,7 @@ const routes = new Router({
                 {
                     path: 'house/add',
                     name: 'house-add',
-                    component: () => import(/* webpackChunkName: "house" */ './views/house/Item.vue'),
+                    component: () => import(/* webpackChunkName: "house.detail" */ './views/house/Item.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', '/house');
                         next();
@@ -69,7 +69,7 @@ const routes = new Router({
                 {
                     path: 'house/:id',
                     name: 'house-edit',
-                    component: () => import(/* webpackChunkName: "house" */ './views/house/Item.vue'),
+                    component: () => import(/* webpackChunkName: "house.detail" */ './views/house/Item.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', '/house');
                         next();
@@ -82,6 +82,7 @@ const routes = new Router({
             name: 'login',
             component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
             beforeEnter(to, from, next) {
+                store.commit('setMenu', to.path);
                 if (localStorage.getItem('tk')) {
                     next('/');
                 } else {

@@ -44,6 +44,9 @@ export default {
         },
         del(params) {
             return ajax('/api/admin/house_resource/del', params, { type: 'post' });
+        },
+        getQRCode(params) {
+            return ajax('/api/admin/House_Resource/getPoster', params, { type: 'post' });
         }
     },
     addr: {
@@ -77,15 +80,15 @@ export default {
                                             active: true
                                         },
                                         {
-                                            id: 3750,
-                                            name: '棠东',
+                                            id: 3751,
+                                            name: '棠下',
                                             first: 'T',
                                             level: 4,
                                             active: false
                                         },
                                         {
-                                            id: 3751,
-                                            name: '棠下',
+                                            id: 3750,
+                                            name: '棠东',
                                             first: 'T',
                                             level: 4,
                                             active: false

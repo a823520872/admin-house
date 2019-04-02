@@ -54,7 +54,7 @@
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination @current-change="getData" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
+                <el-pagination @current-change="pageChange" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
             </div>
         </div>
         <el-dialog title="审核" :visible.sync="dialogCheckVisible" width="480px">
@@ -79,7 +79,7 @@
         </el-dialog>
         <el-dialog title="二维码" :visible.sync="qr" width="480px">
             <div>
-                <img :src="qr" alt="">
+                <img :src="qr" alt="" width="100%">
             </div>
             <div class="dialog-footer" slot="footer">
                 <el-button @click="qr = false">取 消</el-button>
@@ -156,11 +156,19 @@ export default {
             qr: false
         };
     },
+    watch: {
+        $route() {
+            this.getData();
+        }
+    },
     mounted() {
         this.$nextTick(this.getData);
     },
     methods: {
         getData() {
+            if (this.$route.query && this.$route.query.p) {
+                this.pageParams.page = +this.$route.query.p;
+            }
             this.$request.landlord
                 .list({
                     page: this.pageParams.page,
@@ -257,7 +265,8 @@ export default {
                 });
         },
         download() {
-            alert('暂不支持下载');
+            window.open(this.qr);
+            // alert('暂不支持下载');
         }
     }
 };
