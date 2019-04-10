@@ -7,7 +7,12 @@ const baseURL = isPro ? 'http://house.zhiqiang.ink' : '';
 import qs from 'querystringify';
 
 function Ajax(url, params, cfg) {
-    cfg.type = cfg.type || 'get';
+    cfg = {
+        ...cfg,
+        ...{
+            type: 'get'
+        }
+    };
     const obj = {
         method: cfg.type,
         credentials: 'include',

@@ -201,14 +201,20 @@ export default {
             this.params.indate_end = dayjs(e[1].$d).format('YYYY-MM-DD');
         },
         getRentStatus(i) {
-            switch (i) {
-                case 1:
-                    return '平台租';
-                case 2:
-                    return '自己租';
-                default:
-                    return '未租';
-            }
+            // switch (i) {
+            //     case 1:
+            //         return '平台租';
+            //     case 2:
+            //         return '自己租';
+            //     default:
+            //         return '未租';
+            // }
+            const mapping = {
+                '1': '平台租',
+                '2': '自己租'
+            };
+            const effective = Object.keys(mapping).includes(i);
+            return effective ? mapping[i] : '未租';
         },
         handleProd(item) {
             this.$request.house

@@ -6,16 +6,23 @@ const isPro = process.env.NODE_ENV === 'production';
 const baseURL = isPro ? 'http://house.zhiqiang.ink' : '';
 
 function Ajax(url, params, cfg) {
+    cfg = {
+        ...cfg,
+        ...{
+            time: 10000,
+            type: 'get'
+        }
+    };
     const instance = axios.create({
         baseURL,
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         },
         withCredentials: true,
-        timeout: cfg.time || 10000
+        timeout: cfg.time
     });
     const obj = {
-        method: cfg.type || 'get',
+        method: cfg.type,
         url
     };
     const data = obj.method === 'get' ? 'params' : 'data';
