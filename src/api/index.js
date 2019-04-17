@@ -1,4 +1,5 @@
 import ajax from '../utils/fetch.js';
+// import ajax from '../utils/ajax.js';
 
 export default {
     user: {
@@ -50,57 +51,34 @@ export default {
         }
     },
     addr: {
-        area(params) {
-            return new Promise((resolve, reject) => {
-                resolve({
-                    code: 0,
-                    msg: '请求成功',
-                    data: [
-                        {
-                            id: 1965,
-                            name: '广州市',
-                            first: 'G',
-                            pinyin: 'guangzhou',
-                            level: 2,
-                            active: true,
-                            children: [
-                                {
-                                    id: 1969,
-                                    name: '天河区',
-                                    first: 'T',
-                                    pinyin: 'tianhe',
-                                    level: 3,
-                                    active: true,
-                                    children: [
-                                        {
-                                            id: 3749,
-                                            name: '上社',
-                                            first: 'S',
-                                            level: 4,
-                                            active: true
-                                        },
-                                        {
-                                            id: 3751,
-                                            name: '棠下',
-                                            first: 'T',
-                                            level: 4,
-                                            active: false
-                                        },
-                                        {
-                                            id: 3750,
-                                            name: '棠东',
-                                            first: 'T',
-                                            level: 4,
-                                            active: false
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                });
-            });
-            // return ajax('/api/area/getAllList', params);
+        area(params = { }) {
+            return ajax('/api/admin/area/getAllList', params, { type: 'get' })
+            // .then(res => {
+            //     if (res.data) {
+            //         return {
+            //             ...res,
+            //             data: [
+            //                 {
+            //                     id: 1965,
+            //                     name: '广州市',
+            //                     first: 'G',
+            //                     pinyin: 'guangzhou',
+            //                     level: 2,
+            //                     children: [
+            //                         {
+            //                             id: 1969,
+            //                             name: '天河区',
+            //                             first: 'T',
+            //                             pinyin: 'tianhe',
+            //                             level: 3,
+            //                             children: [...res.data]
+            //                         }
+            //                     ]
+            //                 }
+            //             ]
+            //         };
+            //     }
+            // });
         },
         flag(params) {
             return ajax('/api/admin/area_flag/getAllList', params, { type: 'get' });

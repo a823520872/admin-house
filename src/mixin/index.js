@@ -13,7 +13,7 @@ const mixin = {
             this.$router.go(-1);
         },
         getArea() {
-            api.addr.area().then(res => {
+            api.addr.area({ pid: 1965 }).then(res => {
                 if (res.data) {
                     this.addrList = {};
                     this.addr = res.data ? getItem(res.data) : [];

@@ -37,8 +37,8 @@ export default {
                 if (!valid) return;
                 this.$request.user.login(this.form).then(res => {
                     if (res && res.data && res.data.userinfo) {
+                        sessionStorage.setItem('tk', res.data.userinfo.token);
                         this.setUserInfo(res.data.userinfo);
-                        localStorage.setItem('tk', res.data.userinfo.token);
                         this.$router.replace('/');
                     }
                 });

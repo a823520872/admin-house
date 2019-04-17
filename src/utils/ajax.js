@@ -7,11 +7,11 @@ const baseURL = isPro ? 'http://house.zhiqiang.ink' : '';
 
 function Ajax(url, params, cfg) {
     cfg = {
-        ...cfg,
         ...{
             time: 10000,
             type: 'get'
-        }
+        },
+        ...cfg
     };
     const instance = axios.create({
         baseURL,
@@ -33,7 +33,7 @@ function Ajax(url, params, cfg) {
         store.commit('setLoading', true);
         instance(obj).then(
             res => {
-                store.commit('setLoading', true);
+                store.commit('setLoading', false);
                 console.log('请求成功', url, res);
                 if (res.code && res.code === 1) {
                     resolve(res);
@@ -48,7 +48,7 @@ function Ajax(url, params, cfg) {
                 }
             },
             e => {
-                store.commit('setLoading', true);
+                store.commit('setLoading', false);
                 console.log('网络异常', url, e);
                 MessageBox(e.message, '网络异常', 'error');
                 reject({ msg: '网络异常' });

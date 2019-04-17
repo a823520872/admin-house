@@ -10,6 +10,7 @@
         "build:upload": "vue-cli-service build && gulp"
     },
     "dependencies": {
+        "axios": "^0.18.0",
         "dayjs": "^1.8.10",
         "element-ui": "^2.5.1",
         "querystringify": "^2.1.1",

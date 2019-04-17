@@ -70,6 +70,12 @@
                     <el-radio :label="2">下架</el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item label="租房状态">
+                <el-radio-group v-model="form.is_rented">
+                    <el-radio :label="1">已租</el-radio>
+                    <el-radio :label="2">未租</el-radio>
+                </el-radio-group>
+            </el-form-item>
             <el-form-item>
                 <el-button v-back>返回</el-button>
                 <el-button type="primary" @click="submitForm('form')">确定</el-button>
@@ -153,6 +159,7 @@ export default {
                 virtual_number: '',
                 real_number: '',
                 is_public: 2,
+                is_rented: 1,
                 remarks: ''
             },
             // landlord: {

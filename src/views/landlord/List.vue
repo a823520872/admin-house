@@ -6,6 +6,12 @@
                     <el-input v-model="params.name" placeholder="房东姓名"></el-input>
                 </el-form-item>
                 <el-form-item>
+                    <el-input v-model="params.mobile" placeholder="房东手机号"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="params.landlord_nickname" placeholder="房东昵称"></el-input>
+                </el-form-item>
+                <el-form-item>
                     <el-input v-model="params.referrer_user_mobile" placeholder="推荐人手机号"></el-input>
                 </el-form-item>
                 <el-form-item v-if="addr">
@@ -29,10 +35,12 @@
             <el-table :data="data" stripe>
                 <el-table-column prop="id" label="序号" width="50"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="80"></el-table-column>
+                <el-table-column prop="nickname" label="昵称" width="80"></el-table-column>
                 <el-table-column prop="mobile" label="手机号" width="120"></el-table-column>
                 <el-table-column prop="referrer_user_mobile" label="推荐人" width="120"></el-table-column>
                 <el-table-column prop="house_num" label="房源数量" width="80"></el-table-column>
                 <el-table-column prop="public_num" label="发布数量" width="80"></el-table-column>
+                <el-table-column prop="getphone_number" label="获取联系方式数量" width="80"></el-table-column>
                 <el-table-column label="房源位置">
                     <template slot-scope="scope">
                         <!-- <span>{{scope.row.position_province}}</span> -->
@@ -42,6 +50,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="status_remain_days" label="状态" width="80"></el-table-column>
+                <el-table-column prop="open_number" label="开通总时长" width="80"></el-table-column>
                 <el-table-column prop="remarks" label="备注" width="80"></el-table-column>
                 <el-table-column prop="create_t" label="申请时间" width="120"></el-table-column>
                 <el-table-column width="320">

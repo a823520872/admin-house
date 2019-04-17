@@ -14,7 +14,7 @@ const routes = new Router({
             component: Home,
             beforeEnter(to, from, next) {
                 store.commit('setMenu', to.path);
-                if (localStorage.getItem('tk')) {
+                if (sessionStorage.getItem('tk')) {
                     next();
                 } else {
                     next('/login');
@@ -83,7 +83,7 @@ const routes = new Router({
             component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
             beforeEnter(to, from, next) {
                 store.commit('setMenu', to.path);
-                if (localStorage.getItem('tk')) {
+                if (sessionStorage.getItem('tk')) {
                     next('/');
                 } else {
                     next();

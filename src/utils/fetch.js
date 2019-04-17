@@ -8,10 +8,10 @@ import qs from 'querystringify';
 
 function Ajax(url, params, cfg) {
     cfg = {
-        ...cfg,
         ...{
             type: 'get'
-        }
+        },
+        ...cfg
     };
     const obj = {
         method: cfg.type,
@@ -19,7 +19,7 @@ function Ajax(url, params, cfg) {
         mode: 'cors'
     };
     let uri = baseURL + url;
-    const token = localStorage.getItem('tk');
+    const token = sessionStorage.getItem('tk');
     if (cfg.type === 'get') {
         uri += qs.stringify(params, true);
     } else if (cfg.type === 'post') {

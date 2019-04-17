@@ -3,7 +3,13 @@
         <div class="search el-row--flex is-justify-space-between">
             <el-form :inline="true">
                 <el-form-item>
-                    <el-input v-model="params.name" placeholder="房东姓名"></el-input>
+                    <el-input v-model="params.landlord_name" placeholder="房东姓名"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="params.landlord_nickname" placeholder="房东微信名"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="params.landlord_mobile" placeholder="房东电话"></el-input>
                 </el-form-item>
                 <el-form-item v-if="addr">
                     <el-cascader placeholder="房源区域" expand-trigger="hover" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
@@ -31,7 +37,8 @@
         <div class="table">
             <el-table :data="data" stripe>
                 <el-table-column prop="id" label="序号" width="50"></el-table-column>
-                <el-table-column prop="nickname" label="房东" width="80"></el-table-column>
+                <el-table-column prop="landlord_name" label="房东姓名" width="80"></el-table-column>
+                <el-table-column prop="nickname" label="房东昵称" width="80"></el-table-column>
                 <el-table-column prop="contact_mobile" label="手机号" width="120"></el-table-column>
                 <el-table-column prop="house_type" label="房型" width="120"></el-table-column>
                 <el-table-column prop="rental" label="租金" width="80"></el-table-column>
