@@ -13,10 +13,49 @@ const mixin = {
             this.$router.go(-1);
         },
         getArea() {
-            api.addr.area({ pid: 1965 }).then(res => {
+            api.addr.area({}).then(res => {
                 if (res.data) {
+                    const list = res.data;
                     this.addrList = {};
-                    this.addr = res.data ? getItem(res.data) : [];
+                    const addr = list.reduce((obj, item) => {
+                        if (!item.pid) return obj;
+                        this.addrList[item.id] = item;
+                        if (!obj[item.pid]) {
+                            obj[item.pid] = [];
+                        }
+                        obj[item.pid].push(item);
+                        return obj;
+                    }, {});
+
+                    // const province = list.filter(item => item.level === 1);
+                    const city = list.filter(item => item.level === 2);
+                    // const district = list.filter(item => item.level === 3);
+                    // const street = list.filter(item => item.level === 4);
+
+                    const area = city.map(item => {
+                        if (addr[item.id]) {
+                            const children = addr[item.id].map(li => {
+                                if (addr[li.id]) {
+                                    li.children = addr[li.id].map(l => ({
+                                        value: l.id,
+                                        label: l.name
+                                    }));
+                                }
+                                return {
+                                    value: li.id,
+                                    label: li.name,
+                                    children: li.children
+                                };
+                            });
+                            item.children = children;
+                        }
+                        return {
+                            value: item.id,
+                            label: item.name,
+                            children: item.children
+                        };
+                    });
+                    this.addr = area;
                 }
             });
         },
@@ -26,29 +65,4 @@ const mixin = {
         }
     }
 };
-function getItem(list) {
-    if (typeof list === 'object') {
-        if (Array.isArray(list)) {
-            return list.map(item => {
-                return getItem(item);
-            });
-        } else {
-            if (list.children && list.children.length) {
-                list.children = list.children.map(item => {
-                    return getItem(item);
-                });
-                return {
-                    value: list.id,
-                    label: list.name,
-                    children: list.children
-                };
-            } else {
-                return {
-                    value: list.id,
-                    label: list.name
-                };
-            }
-        }
-    }
-}
 export default mixin;

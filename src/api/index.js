@@ -51,34 +51,8 @@ export default {
         }
     },
     addr: {
-        area(params = { }) {
-            return ajax('/api/admin/area/getAllList', params, { type: 'get' })
-            // .then(res => {
-            //     if (res.data) {
-            //         return {
-            //             ...res,
-            //             data: [
-            //                 {
-            //                     id: 1965,
-            //                     name: '广州市',
-            //                     first: 'G',
-            //                     pinyin: 'guangzhou',
-            //                     level: 2,
-            //                     children: [
-            //                         {
-            //                             id: 1969,
-            //                             name: '天河区',
-            //                             first: 'T',
-            //                             pinyin: 'tianhe',
-            //                             level: 3,
-            //                             children: [...res.data]
-            //                         }
-            //                     ]
-            //                 }
-            //             ]
-            //         };
-            //     }
-            // });
+        area(params = {}) {
+            return ajax('/api/admin/area/getAllList', params, { type: 'get' });
         },
         flag(params) {
             return ajax('/api/admin/area_flag/getAllList', params, { type: 'get' });
