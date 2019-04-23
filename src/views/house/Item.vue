@@ -78,15 +78,19 @@
             </el-form-item>
             <el-form-item>
                 <el-button v-back>返回</el-button>
-                <el-button type="primary" @click="submitForm('form')">确定</el-button>
+                <el-button type="primary" @click="submitForm('form')" :loading="loading">确定</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import dayjs from 'dayjs';
 export default {
+    computed: {
+        ...mapState(['loading'])
+    },
     data() {
         return {
             pickerOptions: {

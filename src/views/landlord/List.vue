@@ -56,7 +56,7 @@
                 <el-table-column width="320">
                     <template slot-scope="scope">
                         <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
-                        <el-button size="small" v-link="`/landlord/${scope.row.id}`">编辑</el-button>
+                        <el-button size="small" @click="handleLink(scope.row)">编辑</el-button>
                         <el-button size="small" type="danger" @click="handleDel(scope.row)">删除</el-button>
                         <el-button size="small" type="primary" @click="handleProd(scope.row)">生成二维码</el-button>
                     </template>
@@ -83,7 +83,7 @@
             </el-form>
             <div class="dialog-footer" slot="footer">
                 <el-button @click="cancelCheck('form')">取 消</el-button>
-                <el-button type="primary" @click="check('form')">确 定</el-button>
+                <el-button type="primary" @click="check('form')" :loading="loading">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog title="二维码" :visible.sync="qr" width="480px">
@@ -99,8 +99,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import dayjs from 'dayjs';
+import qs from 'querystring';
 export default {
+    computed: {
+        ...mapState(['loading'])
+    },
     data() {
         return {
             pickerOptions: {
@@ -167,6 +172,19 @@ export default {
     },
     watch: {
         $route() {
+            const query = this.$route.query;
+            for (const key in query) {
+                if (query.hasOwnProperty(key)) {
+                    const element = query[key];
+                    if (element) {
+                        if (key === 'p' && +element) {
+                            this.pageParams.page = +element;
+                        } else {
+                            this.params[key] = decodeURIComponent(element);
+                        }
+                    }
+                }
+            }
             this.getData();
         }
     },
@@ -175,9 +193,6 @@ export default {
     },
     methods: {
         getData() {
-            if (this.$route.query && this.$route.query.p) {
-                this.pageParams.page = +this.$route.query.p;
-            }
             this.$request.landlord
                 .list({
                     page: this.pageParams.page,
@@ -198,9 +213,16 @@ export default {
             this.getArea();
         },
         handleSubmit() {
-            this.pageParams.page = 1;
+            // this.pageParams.page = 1;
             this.data = [];
-            this.getData();
+            // this.getData();
+            const params = {};
+            for (let [k, v] of Object.entries(this.params)) {
+                if (v) {
+                    params[k] = encodeURIComponent(v);
+                }
+            }
+            this.$router.push(`${this.$route.path}?p=1&${qs.stringify(params)}`);
         },
         handleCheck(item) {
             this.form = {
@@ -243,6 +265,9 @@ export default {
         timePicker(e) {
             this.form.indate_begin = dayjs(this.timerange[0]).format('YYYY-MM-DD HH:mm:ss');
             this.form.indate_end = dayjs(this.timerange[1]).format('YYYY-MM-DD HH:mm:ss');
+        },
+        handleLink(item) {
+            this.$router.push(`/landlord/${item.id}`);
         },
         handleDel(item) {
             this.$confirm('确认删除该条信息？', '提示', {
