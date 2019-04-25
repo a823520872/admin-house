@@ -2,8 +2,8 @@
     <div class="action-box">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="房型">
-                <el-select v-model="form.house_type" prop="house_type_id" @change="selectChange('house_type', $event)">
-                    <el-option v-for="li in config.house_type" :key="li.value" :value="li.label" :label="li.label"></el-option>
+                <el-select v-model="form.house_type_id" prop="house_type_id" @change="selectChange('house_type', $event)">
+                    <el-option v-for="li in config.house_type" :key="li.value" :value="li.value" :label="li.label"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="租金">
@@ -15,16 +15,16 @@
                 <el-cascader expand-trigger="hover" prop="postion_street" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
             </el-form-item>
             <el-form-item label="标志建筑">
-                <el-select v-model="form.address_flag" prop="address_flag_id" @change="selectChange('address_flag', $event)">
-                    <el-option v-for="li in config.address_flag" :key="li.value" :value="li.label" :label="li.label"></el-option>
+                <el-select v-model="form.address_flag_id" prop="address_flag_id" @change="selectChange('address_flag', $event)">
+                    <el-option v-for="li in config.address_flag" :key="li.value" :value="li.value" :label="li.label"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="具体位置">
                 <el-input v-model="form.address_detail"></el-input>
             </el-form-item>
             <el-form-item label="路边距离">
-                <el-select v-model="form.road_distance" prop="road_distance_id" @change="selectChange('road_distance', $event)">
-                    <el-option v-for="li in config.road_distance" :key="li.value" :value="li.label" :label="li.label"></el-option>
+                <el-select v-model="form.road_distance_id" prop="road_distance_id" @change="selectChange('road_distance', $event)">
+                    <el-option v-for="li in config.road_distance" :key="li.value" :value="li.value" :label="li.label"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="楼层">
@@ -143,15 +143,15 @@ export default {
                 images: [],
                 // landlord_id: '',
                 rental: '',
-                address_street_id: 1969,
-                address_street: '',
-                address_flag_id: 3752,
-                address_flag: '',
+                address_street_id: '',
+                // address_street: '',
+                address_flag_id: '',
+                // address_flag: '',
                 road_distance_id: '',
-                road_distance: '',
+                // road_distance: '',
                 address_detail: '',
                 house_type_id: '',
-                house_type: '',
+                // house_type: '',
                 floor_number: '',
                 contact_mobile: '',
                 wechat_number: '',
