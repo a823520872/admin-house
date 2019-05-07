@@ -53,7 +53,13 @@
                 <el-table-column prop="create_t" label="发布时间" width="80"></el-table-column>
                 <el-table-column prop="real_number" label="真实阅读量" width="80"></el-table-column>
                 <el-table-column prop="getphone_number" label="获取联系方式" width="120"></el-table-column>
-                <el-table-column label="租房状态" width="120">
+                <el-table-column prop="refresh_number" label="刷新次数" width="120"></el-table-column>
+                <el-table-column label="租房状态" width="80">
+                    <template slot-scope="scope">
+                        <span>{{ getRentedStatus(scope.row.is_rented) }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="租房方式" width="80">
                     <template slot-scope="scope">
                         <span>{{ getRentStatus(scope.row.rent_type) }}</span>
                     </template>
@@ -61,7 +67,8 @@
                 <el-table-column width="280">
                     <template slot-scope="scope">
                         <!-- <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button> -->
-                        <el-button size="small" v-link="`/house/${scope.row.id}`">编辑</el-button>
+                        <!-- v-link="`/house/${scope.row.id}`" -->
+                        <el-button size="small" @click="handleLink(scope.row)">编辑</el-button>
                         <el-button size="small" type="danger" @click="handleDel(scope.row)">删除</el-button>
                         <el-button size="small" type="primary" @click="handleProd(scope.row)">生成二维码</el-button>
                     </template>
@@ -85,6 +92,7 @@
 
 <script>
 import dayjs from 'dayjs';
+import qs from 'querystring';
 export default {
     data() {
         return {
@@ -119,7 +127,11 @@ export default {
             selectedOptions: [],
             timerange: [],
             params: {
-                name: '',
+                landlord_name: '',
+                landlord_nickname: '',
+                landlord_mobile: '',
+                postion_street_id: '',
+                // name: '',
                 status: ''
             },
             pageParams: {
@@ -133,6 +145,19 @@ export default {
     },
     watch: {
         $route() {
+            const query = this.$route.query;
+            for (const key in query) {
+                if (query.hasOwnProperty(key)) {
+                    const element = query[key];
+                    if (element) {
+                        if (key === 'p' && +element) {
+                            this.pageParams.page = +element;
+                        } else {
+                            this.params[key] = decodeURIComponent(element);
+                        }
+                    }
+                }
+            }
             this.getData();
         }
     },
@@ -141,9 +166,9 @@ export default {
     },
     methods: {
         getData() {
-            if (this.$route.query && this.$route.query.p) {
-                this.pageParams.page = +this.$route.query.p;
-            }
+            // if (this.$route.query && this.$route.query.p) {
+            //     this.pageParams.page = +this.$route.query.p;
+            // }
             this.$request.house
                 .list({
                     page: this.pageParams.page,
@@ -164,10 +189,15 @@ export default {
             this.getArea();
         },
         handleSubmit() {
-            this.getData(1);
+            const params = {};
+            for (let [k, v] of Object.entries(this.params)) {
+                if (v) {
+                    params[k] = encodeURIComponent(v);
+                }
+            }
+            this.$router.push(`${this.$route.path}?p=1&${qs.stringify(params)}`);
         },
         handleCheck(item) {
-            console.log(item);
             this.$confirm('确认审核通过该条信息？', '提示', {
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',
@@ -179,7 +209,7 @@ export default {
                 });
             });
         },
-        handleEdit(item) {
+        handleLink(item) {
             this.$router.push(`/house/${item.id}`);
         },
         handleDel(item) {
@@ -207,21 +237,19 @@ export default {
             this.params.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');
             this.params.indate_end = dayjs(e[1].$d).format('YYYY-MM-DD');
         },
+        getRentedStatus(i) {
+            const mapping = {
+                '1': '已租',
+                '2': '未租'
+            };
+            return mapping[i] || '未租';
+        },
         getRentStatus(i) {
-            // switch (i) {
-            //     case 1:
-            //         return '平台租';
-            //     case 2:
-            //         return '自己租';
-            //     default:
-            //         return '未租';
-            // }
             const mapping = {
                 '1': '平台租',
                 '2': '自己租'
             };
-            const effective = Object.keys(mapping).includes(i);
-            return effective ? mapping[i] : '未租';
+            return mapping[i] || '未租';
         },
         handleProd(item) {
             this.$request.house

@@ -27,10 +27,7 @@ const mixin = {
                         return obj;
                     }, {});
 
-                    // const province = list.filter(item => item.level === 1);
                     const city = list.filter(item => item.level === 2);
-                    // const district = list.filter(item => item.level === 3);
-                    // const street = list.filter(item => item.level === 4);
 
                     const area = city.map(item => {
                         if (addr[item.id]) {
