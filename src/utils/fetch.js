@@ -4,7 +4,7 @@ import store from '../store.js';
 import { MessageBox } from 'element-ui';
 const isPro = process.env.NODE_ENV === 'production';
 const baseURL = isPro ? 'http://house.zhiqiang.ink' : '';
-import qs from 'querystring';
+import qs from 'querystringify';
 
 function Ajax(url, params, cfg) {
     cfg = {
@@ -21,7 +21,7 @@ function Ajax(url, params, cfg) {
     let uri = baseURL + url;
     const token = sessionStorage.getItem('tk');
     if (cfg.type === 'get') {
-        uri += '?' + qs.stringify(params);
+        uri += qs.stringify(params, true);
     } else if (cfg.type === 'post') {
         if (cfg.upload) {
             obj.body = params;
@@ -37,10 +37,9 @@ function Ajax(url, params, cfg) {
         obj.headers.token = token;
     }
     return new Promise((resolve, reject) => {
-        store.commit('setLoading', true);
         fetch(uri, obj)
             .then(res => {
-                store.commit('setLoading', false);
+                store.commit('setLoading', true);
                 if (res.ok) {
                     return res.json();
                 } else {

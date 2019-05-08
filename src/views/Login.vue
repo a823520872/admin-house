@@ -9,18 +9,15 @@
                 <el-input v-model="form.password" type="password"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="btn_login" @click.native="handleClick('loginForm')" :loading="loading">登录</el-button>
+                <el-button type="primary" class="btn_login" @click.native="handleClick('loginForm')">登录</el-button>
             </el-form-item>
         </el-form>
     </el-card>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 export default {
-    computed: {
-        ...mapState(['loading'])
-    },
     data() {
         return {
             form: {

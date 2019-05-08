@@ -9,10 +9,7 @@
         <el-container direction="vertical">
             <top-header></top-header>
             <el-main>
-                <keep-alive>
-                    <router-view v-if="$route.meta.keepAlive"></router-view>
-                </keep-alive>
-                <router-view v-if="!$route.meta.keepAlive"></router-view>
+                <router-view />
             </el-main>
         </el-container>
     </el-container>
