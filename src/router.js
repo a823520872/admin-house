@@ -24,6 +24,9 @@ const routes = new Router({
                 {
                     path: 'landlord',
                     name: 'lanlord-list',
+                    meta: {
+                        keepAlive: true
+                    },
                     component: () => import(/* webpackChunkName: "landlords.list" */ './views/landlord/List.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', to.path);
@@ -51,6 +54,9 @@ const routes = new Router({
                 {
                     path: 'house',
                     name: 'house-list',
+                    meta: {
+                        keepAlive: true
+                    },
                     component: () => import(/* webpackChunkName: "houses.list" */ './views/house/List.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', to.path);

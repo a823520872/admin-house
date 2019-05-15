@@ -24,15 +24,19 @@
             </el-form-item>
             <el-form-item>
                 <el-button v-back>返回</el-button>
-                <el-button type="primary" @click="submitForm('form')">确定</el-button>
+                <el-button type="primary" @click="submitForm('form')" :loading="loading">确定</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import dayjs from 'dayjs';
 export default {
+    computed: {
+        ...mapState(['loading'])
+    },
     data() {
         return {
             pickerOptions: {
@@ -85,11 +89,11 @@ export default {
                 position_province_id: '',
                 position_province: '',
                 position_city_id: '',
-                position_city: '',
+                // position_city: '',
                 postion_district_id: '',
-                postion_district: '',
+                // postion_district: '',
                 postion_street_id: '',
-                postion_street: '',
+                // postion_street: '',
                 indate_begin: '',
                 indate_end: '',
                 referrer_user_mobile: '',
@@ -118,7 +122,9 @@ export default {
                         Object.keys(this.form).map(key => {
                             this.form[key] = res.data[key];
                         });
-                        this.timerange = [res.data.indate_begin, res.data.indate_end];
+                        if (res.data.indate_begin && res.data.indate_end) {
+                            this.timerange = [res.data.indate_begin, res.data.indate_end];
+                        }
                         // res.data.position_province_id,
                         this.selectedOptions = [res.data.position_city_id, res.data.postion_district_id, res.data.postion_street_id];
                     }
@@ -126,13 +132,13 @@ export default {
         },
         handleChange(e) {
             this.form.position_province_id = 1964;
-            this.form.position_province = '广东省';
+            // this.form.position_province = '广东省';
             this.form.position_city_id = e[0];
-            this.form.position_city = this.addrList && this.addrList[e[0]];
+            // this.form.position_city = this.addrList && this.addrList[e[0]] && this.addrList[e[0]].name;
             this.form.postion_district_id = e[1];
-            this.form.postion_district = this.addrList && this.addrList[e[1]];
+            // this.form.postion_district = this.addrList && this.addrList[e[1]] && this.addrList[e[1]].name;
             this.form.postion_street_id = e[2];
-            this.form.postion_street = this.addrList && this.addrList[e[2]];
+            // this.form.postion_street = this.addrList && this.addrList[e[2]] && this.addrList[e[2]].name;
         },
         submitForm(name) {
             this.$refs[name].validate(valid => {
