@@ -193,6 +193,9 @@ export default {
     },
     methods: {
         getData() {
+            if (this.$route.query && this.$route.query.p) {
+                this.pageParams.page = +this.$route.query.p;
+            }
             this.$request.landlord
                 .list({
                     page: this.pageParams.page,

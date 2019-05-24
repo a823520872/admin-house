@@ -143,32 +143,11 @@ export default {
             qr: false
         };
     },
-    watch: {
-        $route() {
-            const query = this.$route.query;
-            for (const key in query) {
-                if (query.hasOwnProperty(key)) {
-                    const element = query[key];
-                    if (element) {
-                        if (key === 'p' && +element) {
-                            this.pageParams.page = +element;
-                        } else {
-                            this.params[key] = decodeURIComponent(element);
-                        }
-                    }
-                }
-            }
-            this.getData();
-        }
-    },
     mounted() {
         this.$nextTick(this.getData);
     },
     methods: {
         getData() {
-            // if (this.$route.query && this.$route.query.p) {
-            //     this.pageParams.page = +this.$route.query.p;
-            // }
             this.$request.house
                 .list({
                     page: this.pageParams.page,
