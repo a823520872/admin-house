@@ -143,11 +143,19 @@ export default {
             qr: false
         };
     },
+    watch: {
+        $route() {
+            this.getData();
+        }
+    },
     mounted() {
         this.$nextTick(this.getData);
     },
     methods: {
         getData() {
+            if (this.$route.query && this.$route.query.p) {
+                this.pageParams.page = +this.$route.query.p;
+            }
             this.$request.house
                 .list({
                     page: this.pageParams.page,

@@ -54,7 +54,7 @@ const routes = new Router({
                 {
                     path: 'house',
                     name: 'house-list',
-                    component: () => import(/* webpackChunkName: "houses" */ './views/house/List.vue'),
+                    component: () => import(/* webpackChunkName: "houses.list" */ './views/house/List.vue'),
                     beforeEnter(to, form, next) {
                         store.commit('setMenu', to.path);
                         next();
@@ -85,6 +85,7 @@ const routes = new Router({
             name: 'login',
             component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
             beforeEnter(to, from, next) {
+                store.commit('setMenu', to.path);
                 if (localStorage.getItem('tk')) {
                     next('/');
                 } else {
