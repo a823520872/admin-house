@@ -62,29 +62,5 @@ const mixin = {
         }
     }
 };
-function getItem(list) {
-    if (typeof list === 'object') {
-        if (Array.isArray(list)) {
-            return list.map(item => {
-                return getItem(item);
-            });
-        } else {
-            if (list.children && list.children.length) {
-                list.children = list.children.map(item => {
-                    return getItem(item);
-                });
-                return {
-                    value: list.id,
-                    label: list.name,
-                    children: list.children
-                };
-            } else {
-                return {
-                    value: list.id,
-                    label: list.name
-                };
-            }
-        }
-    }
-}
+
 export default mixin;

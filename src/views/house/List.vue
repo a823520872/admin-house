@@ -184,7 +184,7 @@ export default {
             }
             this.$router.push(`${this.$route.path}?p=1&${qs.stringify(params)}`);
         },
-        handleCheck(item) {
+        handleCheck() {
             this.$confirm('确认审核通过该条信息？', '提示', {
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',

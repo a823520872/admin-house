@@ -83,15 +83,7 @@ const routes = new Router({
         {
             path: '/login',
             name: 'login',
-            component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
-            beforeEnter(to, from, next) {
-                store.commit('setMenu', to.path);
-                if (localStorage.getItem('tk')) {
-                    next('/');
-                } else {
-                    next();
-                }
-            }
+            component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
         }
     ]
 });

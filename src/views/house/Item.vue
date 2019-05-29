@@ -204,7 +204,7 @@ export default {
                             this.form[key] = res.data[key];
                         });
                         this.timerange = [res.data.indate_begin, res.data.indate_end];
-                        this.selectedOptions = [1965, 1969, res.data.address_flag_id];
+                        this.selectedOptions = [1965, 1969, res.data.address_street_id];
                         this.form.config_base_ids = res.data.config_base_ids ? res.data.config_base_ids.split(',').map(item => +item) : [];
                         this.form.config_lightspot_ids = res.data.config_lightspot_ids
                             ? res.data.config_lightspot_ids.split(',').map(item => +item)
@@ -250,7 +250,7 @@ export default {
         },
         handleChange(e) {
             this.form.address_street_id = e[2];
-            this.form.address_street = this.addrList && this.addrList[e[2]];
+            this.form.address_street = this.addrList && this.addrList[e[2]] && this.addrList[e[2]].name;
             this.getAreaFlag();
         },
         submitForm(name) {
