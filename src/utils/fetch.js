@@ -1,38 +1,38 @@
 import 'whatwg-fetch';
+import { MessageBox } from 'element-ui';
+
 import router from '../router.js';
 import store from '../store.js';
-import { MessageBox } from 'element-ui';
+
 const isPro = process.env.NODE_ENV === 'production';
 const baseURL = isPro ? 'http://house.zhiqiang.ink' : '';
 import qs from 'querystring';
 
 function Ajax(url, params, cfg) {
+    const obj = {
+        method: cfg.type,
+        credentials: 'include',
+        mode: 'cors',
+        headers: {}
+    };
+    const token = sessionStorage.getItem('tk');
+    let uri = baseURL + url;
     cfg = {
         ...{
             type: 'get'
         },
         ...cfg
     };
-    const obj = {
-        method: cfg.type,
-        credentials: 'include',
-        mode: 'cors'
-    };
-    let uri = baseURL + url;
-    const token = sessionStorage.getItem('tk');
     if (cfg.type === 'get') {
         uri += '?' + qs.stringify(params);
     } else if (cfg.type === 'post') {
         if (cfg.upload) {
             obj.body = params;
         } else {
-            obj.headers = {
-                'Content-Type': 'application/json'
-            };
+            obj.headers['Content-Type'] = 'application/json';
             obj.body = JSON.stringify(params);
         }
     }
-    obj.headers = obj.headers || {};
     if (token) {
         obj.headers.token = token;
     }
@@ -50,7 +50,7 @@ function Ajax(url, params, cfg) {
                 }
             })
             .then(res => {
-                console.log('请求成功', url, res);
+                // console.log('请求成功', url, res);
                 if (res.code && res.code === 1) {
                     resolve(res);
                 } else {
@@ -64,7 +64,7 @@ function Ajax(url, params, cfg) {
                 }
             })
             .catch(e => {
-                console.log('网络异常', url, e);
+                // console.log('网络异常', url, e);
                 MessageBox(e.message, '网络异常', 'error');
                 reject({ msg: '网络异常' });
             });

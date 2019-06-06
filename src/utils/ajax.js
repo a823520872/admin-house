@@ -1,7 +1,9 @@
+import { MessageBox } from 'element-ui';
 import axios from 'axios';
+
 import router from '../router.js';
 import store from '../store.js';
-import { MessageBox } from 'element-ui';
+
 const isPro = process.env.NODE_ENV === 'production';
 const baseURL = isPro ? 'http://house.zhiqiang.ink' : '';
 
