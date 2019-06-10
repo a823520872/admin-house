@@ -1,3 +1,4 @@
+import qs from 'querystring';
 import api from '../api';
 
 const mixin = {
@@ -57,8 +58,12 @@ const mixin = {
             });
         },
         pageChange(e) {
+            const query = {
+                ...this.$route.query,
+                p: e
+            };
             this.data = [];
-            this.$router.push(`${this.$route.path}?p=${e}`);
+            this.$router.push(`${this.$route.path}?${qs.stringify(query)}`);
         }
     }
 };

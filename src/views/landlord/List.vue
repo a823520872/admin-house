@@ -193,9 +193,6 @@ export default {
     },
     methods: {
         getData() {
-            if (this.$route.query && this.$route.query.p) {
-                this.pageParams.page = +this.$route.query.p;
-            }
             this.$request.landlord
                 .list({
                     page: this.pageParams.page,
@@ -213,13 +210,13 @@ export default {
                         return item;
                     });
                 });
-            this.getArea();
+            this.addr || this.getArea();
         },
         handleSubmit() {
-            // this.pageParams.page = 1;
             this.data = [];
-            // this.getData();
-            const params = {};
+            const params = {
+                p: 1
+            };
             for (let [k, v] of Object.entries(this.params)) {
                 if (v) {
                     params[k] = encodeURIComponent(v);

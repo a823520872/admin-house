@@ -145,6 +145,19 @@ export default {
     },
     watch: {
         $route() {
+            const query = this.$route.query;
+            for (const key in query) {
+                if (query.hasOwnProperty(key)) {
+                    const element = query[key];
+                    if (element) {
+                        if (key === 'p' && +element) {
+                            this.pageParams.page = +element;
+                        } else {
+                            this.params[key] = decodeURIComponent(element);
+                        }
+                    }
+                }
+            }
             this.getData();
         }
     },
@@ -153,9 +166,6 @@ export default {
     },
     methods: {
         getData() {
-            if (this.$route.query && this.$route.query.p) {
-                this.pageParams.page = +this.$route.query.p;
-            }
             this.$request.house
                 .list({
                     page: this.pageParams.page,
@@ -173,16 +183,20 @@ export default {
                         return item;
                     });
                 });
-            this.getArea();
+            this.addr || this.getArea();
         },
         handleSubmit() {
-            const params = {};
+            this.data = [];
+            const params = {
+                p: 1
+            };
             for (let [k, v] of Object.entries(this.params)) {
                 if (v) {
                     params[k] = encodeURIComponent(v);
                 }
             }
-            this.$router.push(`${this.$route.path}?p=1&${qs.stringify(params)}`);
+
+            this.$router.push(`${this.$route.path}?${qs.stringify(params)}`);
         },
         handleCheck() {
             this.$confirm('确认审核通过该条信息？', '提示', {
