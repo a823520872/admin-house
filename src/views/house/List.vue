@@ -78,22 +78,18 @@
                 <el-pagination @current-change="pageChange" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
             </div>
         </div>
-        <el-dialog title="海报" :visible.sync="qr" width="480px">
-            <div>
-                <img :src="qr" alt="" width="100%">
-            </div>
-            <div class="dialog-footer" slot="footer">
-                <el-button @click="qr = false">取 消</el-button>
-                <el-button type="primary" @click="download">下 载</el-button>
-            </div>
-        </el-dialog>
+        <dialog-qr :qr="qr" title="海报"></dialog-qr>
     </div>
 </template>
 
 <script>
 import dayjs from 'dayjs';
 import qs from 'querystring';
+import dialogQr from '../../components/DialogQR';
 export default {
+    components: {
+        dialogQr
+    },
     data() {
         return {
             pickerOptions: {

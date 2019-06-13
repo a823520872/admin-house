@@ -86,15 +86,7 @@
                 <el-button type="primary" @click="check('form')" :loading="loading">确 定</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="二维码" :visible.sync="qr" width="480px">
-            <div>
-                <img :src="qr" alt="" width="100%">
-            </div>
-            <div class="dialog-footer" slot="footer">
-                <el-button @click="qr = false">取 消</el-button>
-                <el-button type="primary" @click="download">下 载</el-button>
-            </div>
-        </el-dialog>
+        <dialog-qr :qr="qr" title="二维码"></dialog-qr>
     </div>
 </template>
 
@@ -102,9 +94,13 @@
 import { mapState } from 'vuex';
 import dayjs from 'dayjs';
 import qs from 'querystring';
+import dialogQr from '../../components/DialogQR';
 export default {
     computed: {
         ...mapState(['loading'])
+    },
+    components: {
+        dialogQr
     },
     data() {
         return {
@@ -297,10 +293,6 @@ export default {
                         this.qr = res.data;
                     }
                 });
-        },
-        download() {
-            window.open(this.qr);
-            // alert('暂不支持下载');
         }
     }
 };
