@@ -1,6 +1,6 @@
-import ajax from '../utils/fetch.js';
+// import ajax from '../utils/fetch.js';
 
-// import ajax from '../utils/ajax.js';
+import ajax from '../utils/ajax.js';
 
 export default {
     user: {
@@ -57,6 +57,11 @@ export default {
         },
         flag(params) {
             return ajax('/api/admin/area_flag/getAllList', params, { type: 'get' });
+        }
+    },
+    statistics: {
+        list(params = {}) {
+            return ajax('/api/admin/statistics/style1', params, { type: 'get' });
         }
     },
     config(params) {

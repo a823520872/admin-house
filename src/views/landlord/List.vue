@@ -51,6 +51,7 @@
                 </el-table-column>
                 <el-table-column prop="status_remain_days" label="状态" width="80"></el-table-column>
                 <el-table-column prop="open_number" label="开通总时长" width="80"></el-table-column>
+                <el-table-column prop="indate_end" label="服务结束时间" width="80"></el-table-column>
                 <el-table-column prop="remarks" label="备注" width="80"></el-table-column>
                 <el-table-column prop="create_t" label="申请时间" width="120"></el-table-column>
                 <el-table-column width="320">
@@ -86,7 +87,7 @@
                 <el-button type="primary" @click="check('form')" :loading="loading">确 定</el-button>
             </div>
         </el-dialog>
-        <dialog-qr :qr="qr" title="二维码"></dialog-qr>
+        <dialog-qr :qr="qr" title="二维码" @close="qr = false"></dialog-qr>
     </div>
 </template>
 
@@ -168,6 +169,16 @@ export default {
     },
     watch: {
         $route() {
+            this.getParams();
+            this.getData();
+        }
+    },
+    mounted() {
+        this.getParams();
+        this.$nextTick(this.getData);
+    },
+    methods: {
+        getParams() {
             const query = this.$route.query;
             for (const key in query) {
                 if (query.hasOwnProperty(key)) {
@@ -181,13 +192,7 @@ export default {
                     }
                 }
             }
-            this.getData();
-        }
-    },
-    mounted() {
-        this.$nextTick(this.getData);
-    },
-    methods: {
+        },
         getData() {
             this.$request.landlord
                 .list({
@@ -259,8 +264,13 @@ export default {
             this.params.postion_street_id = e[2];
         },
         timePicker(e) {
-            this.form.indate_begin = dayjs(this.timerange[0]).format('YYYY-MM-DD HH:mm:ss');
-            this.form.indate_end = dayjs(this.timerange[1]).format('YYYY-MM-DD HH:mm:ss');
+            if (e) {
+                this.form.indate_begin = dayjs(this.timerange[0]).format('YYYY-MM-DD HH:mm:ss');
+                this.form.indate_end = dayjs(this.timerange[1]).format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                this.form.indate_begin = '';
+                this.form.indate_end = '';
+            }
         },
         handleLink(item) {
             this.$router.push(`/landlord/${item.id}`);

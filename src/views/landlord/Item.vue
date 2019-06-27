@@ -152,8 +152,13 @@ export default {
             });
         },
         timePicker(e) {
-            this.form.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');
-            this.form.indate_end = dayjs(e[1].$d).format('YYYY-MM-DD');
+            if (e) {
+                this.form.indate_begin = dayjs(e[0]).format('YYYY-MM-DD');
+                this.form.indate_end = dayjs(e[1]).format('YYYY-MM-DD');
+            } else {
+                this.form.indate_begin = '';
+                this.form.indate_end = '';
+            }
         }
     }
 };

@@ -24,6 +24,10 @@ export default {
                 {
                     path: '/house',
                     name: '房源管理'
+                },
+                {
+                    path: '/statistics',
+                    name: '数据统计'
                 }
             ]
         };

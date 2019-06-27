@@ -78,15 +78,19 @@
                 <el-pagination @current-change="pageChange" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
             </div>
         </div>
-        <dialog-qr :qr="qr" title="海报"></dialog-qr>
+        <dialog-qr :qr="qr" title="海报" @close="qr = false"></dialog-qr>
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import dayjs from 'dayjs';
 import qs from 'querystring';
 import dialogQr from '../../components/DialogQR';
 export default {
+    computed: {
+        ...mapState(['loading'])
+    },
     components: {
         dialogQr
     },
@@ -141,6 +145,16 @@ export default {
     },
     watch: {
         $route() {
+            this.getParams();
+            this.getData();
+        }
+    },
+    mounted() {
+        this.getParams();
+        this.$nextTick(this.getData);
+    },
+    methods: {
+        getParams() {
             const query = this.$route.query;
             for (const key in query) {
                 if (query.hasOwnProperty(key)) {
@@ -154,13 +168,7 @@ export default {
                     }
                 }
             }
-            this.getData();
-        }
-    },
-    mounted() {
-        this.$nextTick(this.getData);
-    },
-    methods: {
+        },
         getData() {
             this.$request.house
                 .list({
@@ -231,8 +239,13 @@ export default {
             this.params.postion_street_id = e[2];
         },
         timePicker(e) {
-            this.params.indate_begin = dayjs(e[0].$d).format('YYYY-MM-DD');
-            this.params.indate_end = dayjs(e[1].$d).format('YYYY-MM-DD');
+            if (e) {
+                this.params.indate_begin = dayjs(e[0]).format('YYYY-MM-DD');
+                this.params.indate_end = dayjs(e[1]).format('YYYY-MM-DD');
+            } else {
+                this.params.indate_begin = '';
+                this.params.indate_end = '';
+            }
         },
         getRentedStatus(i) {
             const mapping = {

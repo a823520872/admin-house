@@ -28,7 +28,7 @@ const mixin = {
                         return obj;
                     }, {});
 
-                    const city = list.filter(item => item.level === 2);
+                    const city = list.filter(filterCity);
 
                     const area = city.map(item => {
                         if (addr[item.id]) {
@@ -67,5 +67,9 @@ const mixin = {
         }
     }
 };
+
+function filterCity(item) {
+    return item.level === 2;
+}
 
 export default mixin;
