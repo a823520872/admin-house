@@ -10,7 +10,7 @@ export default {
     },
     landlord: {
         list(params) {
-            return ajax('/api/admin/Landlord/getList', params, { type: 'get' });
+            return ajax('/api/admin/landlord/getList', params, { type: 'get' });
         },
         detail(params) {
             return ajax('/api/admin/landlord/getDetail', params, { type: 'get' });
@@ -25,7 +25,7 @@ export default {
             return ajax('/api/admin/landlord/del', params, { type: 'post' });
         },
         check(params) {
-            return ajax('/api/admin/Landlord/audit', params, { type: 'post' });
+            return ajax('/api/admin/landlord/audit', params, { type: 'post' });
         },
         getQRCode(params) {
             return ajax('/api/admin/landlord/getQrcode', params, { type: 'post' });
@@ -33,7 +33,7 @@ export default {
     },
     house: {
         list(params) {
-            return ajax('/api/admin/House_Resource/getList', params, { type: 'get' });
+            return ajax('/api/admin/house_resource/getList', params, { type: 'get' });
         },
         detail(params) {
             return ajax('/api/admin/house_resource/getDetail', params, { type: 'get' });
@@ -48,7 +48,7 @@ export default {
             return ajax('/api/admin/house_resource/del', params, { type: 'post' });
         },
         getQRCode(params) {
-            return ajax('/api/admin/House_Resource/getPoster', params, { type: 'post' });
+            return ajax('/api/admin/house_resource/getPoster', params, { type: 'post' });
         }
     },
     addr: {

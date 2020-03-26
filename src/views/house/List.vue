@@ -85,7 +85,6 @@
 <script>
 import { mapState } from 'vuex';
 import dayjs from 'dayjs';
-import qs from 'querystring';
 import dialogQr from '../../components/DialogQR';
 export default {
     computed: {
@@ -143,32 +142,15 @@ export default {
             qr: false
         };
     },
-    watch: {
-        $route() {
-            this.getParams();
-            this.getData();
-        }
-    },
-    mounted() {
-        this.getParams();
+    // watch: {
+    //     $route() {
+    //         this.$nextTick(this.getData);
+    //     }
+    // },
+    activated() {
         this.$nextTick(this.getData);
     },
     methods: {
-        getParams() {
-            const query = this.$route.query;
-            for (const key in query) {
-                if (query.hasOwnProperty(key)) {
-                    const element = query[key];
-                    if (element) {
-                        if (key === 'p' && +element) {
-                            this.pageParams.page = +element;
-                        } else {
-                            this.params[key] = decodeURIComponent(element);
-                        }
-                    }
-                }
-            }
-        },
         getData() {
             this.$request.house
                 .list({
@@ -190,17 +172,12 @@ export default {
             this.addr || this.getArea();
         },
         handleSubmit() {
-            this.data = [];
-            const params = {
-                p: 1
-            };
-            for (let [k, v] of Object.entries(this.params)) {
-                if (v) {
-                    params[k] = encodeURIComponent(v);
-                }
-            }
-
-            this.$router.push(`${this.$route.path}?${qs.stringify(params)}`);
+            this.pageParams.page = 1;
+            this.getData();
+        },
+        pageChange(e) {
+            this.pageParams.page = e;
+            this.getData();
         },
         handleCheck() {
             this.$confirm('确认审核通过该条信息？', '提示', {

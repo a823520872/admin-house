@@ -19,6 +19,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="params.status" placeholder="状态">
+                        <el-option label="全部" :value="0"></el-option>
                         <el-option label="未开通" :value="1"></el-option>
                         <el-option label="已开通" :value="2"></el-option>
                     </el-select>
@@ -94,7 +95,6 @@
 <script>
 import { mapState } from 'vuex';
 import dayjs from 'dayjs';
-import qs from 'querystring';
 import dialogQr from '../../components/DialogQR';
 export default {
     computed: {
@@ -104,38 +104,35 @@ export default {
         dialogQr
     },
     data() {
+        const start = dayjs();
         return {
             pickerOptions: {
                 shortcuts: [
                     {
                         text: '最近一个月',
                         onClick(picker) {
-                            const start = dayjs();
-                            const end = dayjs().add(1, 'months');
+                            const end = start.add(1, 'months');
                             picker.$emit('pick', [start, end]);
                         }
                     },
                     {
                         text: '最近三个月',
                         onClick(picker) {
-                            const start = dayjs();
-                            const end = dayjs().add(3, 'months');
+                            const end = start.add(3, 'months');
                             picker.$emit('pick', [start, end]);
                         }
                     },
                     {
                         text: '最近半年',
                         onClick(picker) {
-                            const start = dayjs();
-                            const end = dayjs().add(6, 'months');
+                            const end = start.add(6, 'months');
                             picker.$emit('pick', [start, end]);
                         }
                     },
                     {
                         text: '最近一年',
                         onClick(picker) {
-                            const start = dayjs();
-                            const end = dayjs().add(1, 'years');
+                            const end = start.add(1, 'years');
                             picker.$emit('pick', [start, end]);
                         }
                     }
@@ -167,32 +164,15 @@ export default {
             qr: false
         };
     },
-    watch: {
-        $route() {
-            this.getParams();
-            this.getData();
-        }
-    },
-    mounted() {
-        this.getParams();
+    // watch: {
+    //     $route() {
+    //         this.$nextTick(this.getData);
+    //     }
+    // },
+    activated() {
         this.$nextTick(this.getData);
     },
     methods: {
-        getParams() {
-            const query = this.$route.query;
-            for (const key in query) {
-                if (query.hasOwnProperty(key)) {
-                    const element = query[key];
-                    if (element) {
-                        if (key === 'p' && +element) {
-                            this.pageParams.page = +element;
-                        } else {
-                            this.params[key] = decodeURIComponent(element);
-                        }
-                    }
-                }
-            }
-        },
         getData() {
             this.$request.landlord
                 .list({
@@ -214,16 +194,12 @@ export default {
             this.addr || this.getArea();
         },
         handleSubmit() {
-            this.data = [];
-            const params = {
-                p: 1
-            };
-            for (let [k, v] of Object.entries(this.params)) {
-                if (v) {
-                    params[k] = encodeURIComponent(v);
-                }
-            }
-            this.$router.push(`${this.$route.path}?p=1&${qs.stringify(params)}`);
+            this.pageParams.page = 1;
+            this.getData();
+        },
+        pageChange(e) {
+            this.pageParams.page = e;
+            this.getData();
         },
         handleCheck(item) {
             this.form = {

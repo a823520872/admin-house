@@ -1,6 +1,8 @@
 <template>
     <el-card class="login">
         <div slot="header">村里租房管理系统</div>
+        <input type="text" pattern="[a-z]{1,15}">
+        <regex-input v-model="a" pattern="^[0-9]+(.[0-9]{2})$"></regex-input>
         <el-form :model="form" :rules="rules" ref="loginForm" label-width="80px" @keydown.enter.native="handleClick('loginForm')">
             <el-form-item label="用户名">
                 <el-input v-model="form.account"></el-input>
@@ -17,12 +19,17 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import RegexInput from '../components/RegexpInput'
 export default {
+    components: {
+        RegexInput
+    },
     computed: {
         ...mapState(['loading'])
     },
     data() {
         return {
+            a: '',
             form: {
                 account: '',
                 password: ''

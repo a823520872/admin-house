@@ -3,7 +3,17 @@
         <div class="search el-row--flex is-justify-space-between">
             <el-form :inline="true">
                 <el-form-item>
-                    <el-date-picker v-model="timerange" @change="timePicker" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                    <el-date-picker
+                        v-model="timerange"
+                        @change="timePicker"
+                        type="daterange"
+                        align="right"
+                        unlink-panels
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerOptions"
+                    ></el-date-picker>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">搜索</el-button>
@@ -32,7 +42,6 @@
 
 <script>
 import dayjs from 'dayjs';
-import qs from 'querystring';
 export default {
     data() {
         return {
@@ -78,34 +87,19 @@ export default {
             data: null
         };
     },
-    watch: {
-        $route() {
-            this.getParams();
-            this.getData();
-        }
-    },
-    mounted() {
-        this.getParams();
+    // watch: {
+    //     $route() {
+    //         if (this.params.begin_date && this.params.end_date) {
+    //             this.getData();
+    //         }
+    //     }
+    // },
+    activated() {
         if (this.params.begin_date && this.params.end_date) {
             this.$nextTick(this.getData);
         }
     },
     methods: {
-        getParams() {
-            const query = this.$route.query;
-            for (const key in query) {
-                if (query.hasOwnProperty(key)) {
-                    const element = query[key];
-                    if (element) {
-                        if (key === 'p' && +element) {
-                            this.pageParams.page = +element;
-                        } else {
-                            this.params[key] = decodeURIComponent(element);
-                        }
-                    }
-                }
-            }
-        },
         getData() {
             this.$request.statistics
                 .list({
@@ -124,17 +118,8 @@ export default {
                 });
         },
         handleSubmit() {
-            this.data = [];
-            const params = {
-                // p: 1
-            };
-            for (let [k, v] of Object.entries(this.params)) {
-                if (v) {
-                    params[k] = encodeURIComponent(v);
-                }
-            }
-
-            this.$router.push(`${this.$route.path}?${qs.stringify(params)}`);
+            // this.pageParams.page = 1;
+            this.getData();
         },
         timePicker(e) {
             if (e) {

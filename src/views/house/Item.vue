@@ -12,7 +12,14 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="房源位置" v-if="addr">
-                <el-cascader expand-trigger="hover" prop="postion_street" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
+                <el-cascader
+                    expand-trigger="hover"
+                    prop="postion_street"
+                    separator=" "
+                    :options="addr"
+                    v-model="selectedOptions"
+                    @change="handleChange"
+                ></el-cascader>
             </el-form-item>
             <el-form-item label="标志建筑">
                 <el-select v-model="form.address_flag_id" prop="address_flag_id" @change="selectChange('address_flag', $event)">
@@ -36,8 +43,8 @@
                 <el-row v-if="form.images && form.images.length" :gutter="10">
                     <el-col :span="7" v-for="(li, i) in form.images" :key="i">
                         <div class="avatar">
-                            <a :href="li.url" target="_blank" rel="noopener noreferrer">
-                                <img :src="li.url" alt="">
+                            <a :href="li" target="_blank" rel="noopener noreferrer">
+                                <img :src="li" alt="" />
                             </a>
                             <el-button class="close" type="text" @click="delImg(i)"><span>&times;</span></el-button>
                         </div>
@@ -50,12 +57,12 @@
             </el-form-item>
             <el-form-item label="基础设施">
                 <el-checkbox-group v-model="form.config_base_ids">
-                    <el-checkbox v-for="li in config.config_base" :key="li.value" :label="li.value">{{li.label}}</el-checkbox>
+                    <el-checkbox v-for="li in config.config_base" :key="li.value" :label="li.value">{{ li.label }}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item label="亮点">
                 <el-checkbox-group v-model="form.config_lightspot_ids">
-                    <el-checkbox v-for="li in config.config_lightspot" :key="li.value" :label="li.value">{{li.label}}</el-checkbox>
+                    <el-checkbox v-for="li in config.config_lightspot" :key="li.value" :label="li.value">{{ li.label }}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item label="虚假阅读量">
@@ -136,7 +143,10 @@ export default {
                 road_distance: [{ required: true, message: '请选择路边距离', trigger: 'blur' }],
                 house_type: [{ required: true, message: '请选择房型', trigger: 'blur' }],
                 floor_number: [{ required: true, message: '请输入楼层', trigger: 'blur' }],
-                images: [{ type: 'array', message: '请上传图片', trigger: 'blur' }, { min: 2, message: '请至少上传2张图片', trigger: 'blur' }]
+                images: [
+                    { type: 'array', message: '请上传图片', trigger: 'blur' },
+                    { min: 2, message: '请至少上传2张图片', trigger: 'blur' }
+                ]
             },
             form: {
                 id: '',
@@ -209,7 +219,7 @@ export default {
                         this.form.config_lightspot_ids = res.data.config_lightspot_ids
                             ? res.data.config_lightspot_ids.split(',').map(item => +item)
                             : [];
-                        this.form.images = (res.data.image_urls ? res.data.image_urls.split(',') : []).map(item => ({ url: item }));
+                        this.form.images = res.data.image_urls ? res.data.image_urls.split(',') : [];
                         this.getAreaFlag();
                     }
                 });
@@ -257,10 +267,12 @@ export default {
             this.$refs[name].validate(valid => {
                 if (!valid) return;
                 let url = this.id ? 'edit' : 'add';
+                let { config_base_ids, config_lightspot_ids, images, ...items } = this.form;
                 const data = {
-                    ...this.form,
-                    config_base_ids: this.form.config_base_ids.join(','),
-                    config_lightspot_ids: this.form.config_lightspot_ids.join(',')
+                    ...items,
+                    config_base_ids: config_base_ids.join(','),
+                    config_lightspot_ids: config_lightspot_ids.join(','),
+                    images: images.map(url => ({ url }))
                 };
                 if (this.id) {
                     data.id = this.id;
@@ -284,7 +296,7 @@ export default {
             data.append('file', file);
             this.$request.upload(data).then(res => {
                 if (res.data && res.data.url) {
-                    this.form.images.push(res.data);
+                    this.form.images.push(res.data.url);
                 }
             });
             return false;

@@ -14,6 +14,7 @@ const mixin = {
             this.$router.go(-1);
         },
         getArea() {
+            if (this.addr) return;
             api.addr.area({}).then(res => {
                 if (res.data) {
                     const list = res.data;
@@ -56,14 +57,6 @@ const mixin = {
                     this.addr = area;
                 }
             });
-        },
-        pageChange(e) {
-            const query = {
-                ...this.$route.query,
-                p: e
-            };
-            this.data = [];
-            this.$router.push(`${this.$route.path}?${qs.stringify(query)}`);
         }
     }
 };

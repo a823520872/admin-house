@@ -36,7 +36,7 @@ function Ajax(url, params, cfg) {
         instance(obj).then(
             res => {
                 store.commit('setLoading', false);
-                console.log('请求成功', url, res);
+                // console.log('请求成功', url, res);
                 if (res.code && res.code === 1) {
                     resolve(res);
                 } else {
