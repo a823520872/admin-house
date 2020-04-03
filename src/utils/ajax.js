@@ -29,8 +29,14 @@ function Ajax(url, params, cfg) {
     };
     const data = obj.method === 'get' ? 'params' : 'data';
     obj[data] = params;
-    instance.interceptors.request.use(config => config, e => e);
-    instance.interceptors.response.use(res => res.data, e => e);
+    // instance.interceptors.request.use(
+    //     config => config,
+    //     e => e
+    // );
+    instance.interceptors.response.use(
+        res => res.data,
+        e => e
+    );
     return new Promise((resolve, reject) => {
         store.commit('setLoading', true);
         instance(obj).then(

@@ -92,11 +92,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import dayjs from 'dayjs';
 export default {
     computed: {
-        ...mapState(['loading'])
+        ...mapState(['loading', 'addr', 'addrList'])
     },
     data() {
         return {
@@ -197,29 +197,31 @@ export default {
     mounted() {
         if (this.$route.params.id) {
             this.id = this.$route.params.id;
-            this.$nextTick(this.getData);
         }
-        this.getArea();
+        this.getArea().then(() => {
+            this.getData();
+        });
         this.getConfig();
     },
     methods: {
+        ...mapActions(['getArea']),
         getData() {
+            if (!this.id) return;
             this.$request.house
                 .detail({
                     id: this.id
                 })
                 .then(res => {
                     if (res.data) {
+                        let { indate_begin, indate_end, address_street_id, config_base_ids, config_lightspot_ids, image_urls } = res.data || {};
                         Object.keys(this.form).map(key => {
                             this.form[key] = res.data[key];
                         });
-                        this.timerange = [res.data.indate_begin, res.data.indate_end];
-                        this.selectedOptions = [1965, 1969, res.data.address_street_id];
-                        this.form.config_base_ids = res.data.config_base_ids ? res.data.config_base_ids.split(',').map(item => +item) : [];
-                        this.form.config_lightspot_ids = res.data.config_lightspot_ids
-                            ? res.data.config_lightspot_ids.split(',').map(item => +item)
-                            : [];
-                        this.form.images = res.data.image_urls ? res.data.image_urls.split(',') : [];
+                        this.timerange = [indate_begin, indate_end];
+                        this.selectedOptions = [1965, this.addrList[address_street_id].pid, address_street_id];
+                        this.form.config_base_ids = config_base_ids ? config_base_ids.split(',').map(item => +item) : [];
+                        this.form.config_lightspot_ids = config_lightspot_ids ? config_lightspot_ids.split(',').map(item => +item) : [];
+                        this.form.images = image_urls ? image_urls.split(',') : [];
                         this.getAreaFlag();
                     }
                 });

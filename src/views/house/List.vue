@@ -12,7 +12,14 @@
                     <el-input v-model="params.landlord_mobile" placeholder="房东电话"></el-input>
                 </el-form-item>
                 <el-form-item v-if="addr">
-                    <el-cascader placeholder="房源区域" expand-trigger="hover" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
+                    <el-cascader
+                        placeholder="所属村"
+                        expand-trigger="hover"
+                        separator=" "
+                        :options="addr"
+                        v-model="selectedOptions"
+                        @change="handleChange"
+                    ></el-cascader>
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="params.status" placeholder="状态">
@@ -21,7 +28,17 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-date-picker v-model="timerange" @change="timePicker" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                    <el-date-picker
+                        v-model="timerange"
+                        @change="timePicker"
+                        type="daterange"
+                        align="right"
+                        unlink-panels
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerOptions"
+                    ></el-date-picker>
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="params.is_rented" placeholder="租房状态">
@@ -44,7 +61,7 @@
                 <el-table-column prop="rental" label="租金" width="80"></el-table-column>
                 <el-table-column label="房源区域" width="80">
                     <template slot-scope="scope">
-                        <span>{{scope.row.address_street}}</span>
+                        <span>{{ scope.row.address_street }}</span>
                         <!-- <span>{{scope.row.address_flag}}</span>
                         <span>{{scope.row.address_detail}}</span> -->
                     </template>
@@ -75,7 +92,12 @@
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination @current-change="pageChange" :page-size="pageParams.pageSize" :total="pageParams.count" :current-page.sync="pageParams.page"></el-pagination>
+                <el-pagination
+                    @current-change="pageChange"
+                    :page-size="pageParams.pageSize"
+                    :total="pageParams.count"
+                    :current-page.sync="pageParams.page"
+                ></el-pagination>
             </div>
         </div>
         <dialog-qr :qr="qr" title="海报" @close="qr = false"></dialog-qr>
@@ -83,12 +105,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import dayjs from 'dayjs';
 import dialogQr from '../../components/DialogQR';
 export default {
     computed: {
-        ...mapState(['loading'])
+        ...mapState(['loading', 'addr'])
     },
     components: {
         dialogQr
@@ -148,9 +170,11 @@ export default {
     //     }
     // },
     activated() {
+        this.getArea();
         this.$nextTick(this.getData);
     },
     methods: {
+        ...mapActions(['getArea']),
         getData() {
             this.$request.house
                 .list({
@@ -169,7 +193,6 @@ export default {
                         return item;
                     });
                 });
-            this.addr || this.getArea();
         },
         handleSubmit() {
             this.pageParams.page = 1;

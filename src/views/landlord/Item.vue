@@ -11,10 +11,28 @@
                 <el-input v-model.number="form.num" prop="num"></el-input>
             </el-form-item> -->
             <el-form-item label="房源位置" v-if="addr">
-                <el-cascader expand-trigger="hover" prop="postion_street" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
+                <el-cascader
+                    expand-trigger="hover"
+                    prop="postion_street"
+                    separator=" "
+                    :options="addr"
+                    v-model="selectedOptions"
+                    @change="handleChange"
+                ></el-cascader>
             </el-form-item>
             <el-form-item label="到期时间">
-                <el-date-picker v-model="timerange" prop="indate_end" @change="timePicker" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
+                <el-date-picker
+                    v-model="timerange"
+                    prop="indate_end"
+                    @change="timePicker"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :picker-options="pickerOptions"
+                ></el-date-picker>
             </el-form-item>
             <el-form-item label="推荐人">
                 <el-input v-model="form.referrer_user_mobile"></el-input>
@@ -31,11 +49,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import dayjs from 'dayjs';
 export default {
     computed: {
-        ...mapState(['loading'])
+        ...mapState(['loading', 'addr'])
     },
     data() {
         return {
@@ -112,6 +130,7 @@ export default {
         this.getArea();
     },
     methods: {
+        ...mapActions(['getArea']),
         getData() {
             this.$request.landlord
                 .detail({
@@ -132,13 +151,9 @@ export default {
         },
         handleChange(e) {
             this.form.position_province_id = 1964;
-            // this.form.position_province = '广东省';
             this.form.position_city_id = e[0];
-            // this.form.position_city = this.addrList && this.addrList[e[0]] && this.addrList[e[0]].name;
             this.form.postion_district_id = e[1];
-            // this.form.postion_district = this.addrList && this.addrList[e[1]] && this.addrList[e[1]].name;
             this.form.postion_street_id = e[2];
-            // this.form.postion_street = this.addrList && this.addrList[e[2]] && this.addrList[e[2]].name;
         },
         submitForm(name) {
             this.$refs[name].validate(valid => {
