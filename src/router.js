@@ -18,10 +18,11 @@ const routes = new Router({
                 {
                     path: 'statistics',
                     meta: {
-                        keepAlive: true
+                        keepAlive: true,
+                        _menu: '/statistics'
                     },
                     component: () => import(/* webpackChunkName: "statistics.list" */ './views/statistics/List.vue')
-                },
+                }
             ]
         },
         {
@@ -32,16 +33,25 @@ const routes = new Router({
                     path: '/',
                     component: () => import(/* webpackChunkName: "landlord.list" */ './views/landlord/List.vue'),
                     meta: {
-                        keepAlive: true
+                        keepAlive: true,
+                        _menu: '/landlord'
                     }
                 },
                 {
                     path: 'add',
                     component: () => import(/* webpackChunkName: "landlord.detail" */ './views/landlord/Item.vue'),
+                    meta: {
+                        _title: '添加房东',
+                        _menu: '/landlord'
+                    }
                 },
                 {
                     path: ':id',
                     component: () => import(/* webpackChunkName: "landlord.detail" */ './views/landlord/Item.vue'),
+                    meta: {
+                        _title: '编辑房东',
+                        _menu: '/landlord'
+                    }
                 }
             ]
         },
@@ -53,16 +63,51 @@ const routes = new Router({
                     path: '/',
                     component: () => import(/* webpackChunkName: "house.list" */ './views/house/List.vue'),
                     meta: {
-                        keepAlive: true
+                        keepAlive: true,
+                        _menu: '/house'
                     }
                 },
                 {
                     path: 'add',
                     component: () => import(/* webpackChunkName: "house.detail" */ './views/house/Item.vue'),
+                    meta: {
+                        _title: '添加房源',
+                        _menu: '/house'
+                    }
                 },
                 {
                     path: ':id',
                     component: () => import(/* webpackChunkName: "house.detail" */ './views/house/Item.vue'),
+                    meta: {
+                        _title: '编辑房源',
+                        _menu: '/house'
+                    }
+                }
+            ]
+        },
+        {
+            path: '/address',
+            component: Home,
+            children: [
+                // {
+                //     path: '/',
+                //     redirect: '/address/street'
+                // },
+                {
+                    path: 'street',
+                    component: () => import(/* webpackChunkName: "street" */ './views/address/street.vue'),
+                    meta: {
+                        keepAlive: true,
+                        _menu: '/address/street'
+                    }
+                },
+                {
+                    path: 'flag',
+                    component: () => import(/* webpackChunkName: "flag" */ './views/address/flag.vue'),
+                    meta: {
+                        keepAlive: true,
+                        _menu: '/address/flag'
+                    }
                 }
             ]
         },
@@ -70,6 +115,10 @@ const routes = new Router({
             path: '/login',
             name: 'login',
             component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
+        },
+        {
+            path: '*',
+            redirect: '/'
         }
     ]
 });
@@ -79,15 +128,12 @@ routes.beforeEach((to, form, next) => {
         next();
     } else {
         if (sessionStorage.getItem('tk')) {
-            let pathArray = to.path.split('/')
-            if (pathArray[1]) {
-                store.commit('setMenu', '/'+pathArray[1]);
-            }
+            store.commit('setMenu', `${to.meta._menu}`);
             next();
         } else {
             next('/login');
         }
     }
-})
+});
 
 export default routes;

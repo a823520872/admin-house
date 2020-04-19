@@ -29,6 +29,9 @@ export default {
         },
         getQRCode(params) {
             return ajax('/api/admin/landlord/getQrcode', params, { type: 'post' });
+        },
+        getOpenList(params) {
+            return ajax('/api/admin/landlord/getOpeningList', params, { type: 'get' });
         }
     },
     house: {
@@ -49,14 +52,38 @@ export default {
         },
         getQRCode(params) {
             return ajax('/api/admin/house_resource/getPoster', params, { type: 'post' });
+        },
+        updateRentStatus(params) {
+            return ajax('/api/admin/house_resource/changeRantstatus', params, { type: 'post' });
         }
     },
     addr: {
         area(params = {}) {
             return ajax('/api/admin/area/getAllList', params, { type: 'get' });
         },
+        street(params = {}) {
+            return ajax('/api/admin/Area_Street/getList', params, { type: 'get' });
+        },
+        addStreet(params = {}) {
+            return ajax('/api/admin/Area_Street/add', params, { type: 'post' });
+        },
+        editStreet(params = {}) {
+            return ajax('/api/admin/Area_Street/edit', params, { type: 'post' });
+        },
+        delStreet(params = {}) {
+            return ajax('/api/admin/Area_Street/del', params, { type: 'post' });
+        },
         flag(params) {
-            return ajax('/api/admin/area_flag/getAllList', params, { type: 'get' });
+            return ajax('/api/admin/area_flag/getList', params, { type: 'get' });
+        },
+        addFlag(params = {}) {
+            return ajax('/api/admin/Area_Flag/add', params, { type: 'post' });
+        },
+        editFlag(params = {}) {
+            return ajax('/api/admin/Area_Flag/edit', params, { type: 'post' });
+        },
+        delFlag(params = {}) {
+            return ajax('/api/admin/Area_Flag/del', params, { type: 'post' });
         }
     },
     statistics: {

@@ -1,5 +1,6 @@
 <template>
     <div class="action-box">
+        <page-header></page-header>
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="房型">
                 <el-select v-model="form.house_type_id" prop="house_type_id" @change="selectChange('house_type', $event)">
@@ -71,16 +72,22 @@
             <el-form-item label="真实阅读量">
                 <el-input v-model.number="form.real_number"></el-input>
             </el-form-item>
-            <el-form-item label="发布状态">
+            <!-- <el-form-item label="发布状态">
                 <el-radio-group v-model="form.is_public">
                     <el-radio :label="1">上架</el-radio>
                     <el-radio :label="2">下架</el-radio>
                 </el-radio-group>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="租房状态">
-                <el-radio-group v-model="form.is_rented">
+                <!-- <el-radio-group v-model="form.is_rented">
                     <el-radio :label="1">已租</el-radio>
                     <el-radio :label="2">未租</el-radio>
+                </el-radio-group> -->
+                <el-radio-group v-model="form.rent_status" prop="rent_status">
+                    <el-radio label="未租">未租</el-radio>
+                    <el-radio label="平台租">平台租</el-radio>
+                    <el-radio label="自己租">自己租</el-radio>
+                    <el-radio label="平台下架">平台下架</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item>
@@ -94,9 +101,13 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import dayjs from 'dayjs';
+import PageHeader from '../../components/PageHeader';
 export default {
     computed: {
         ...mapState(['loading', 'addr', 'addrList'])
+    },
+    components: {
+        PageHeader
     },
     data() {
         return {
@@ -143,10 +154,7 @@ export default {
                 road_distance: [{ required: true, message: '请选择路边距离', trigger: 'blur' }],
                 house_type: [{ required: true, message: '请选择房型', trigger: 'blur' }],
                 floor_number: [{ required: true, message: '请输入楼层', trigger: 'blur' }],
-                images: [
-                    { type: 'array', message: '请上传图片', trigger: 'blur' },
-                    { min: 2, message: '请至少上传2张图片', trigger: 'blur' }
-                ]
+                images: [{ type: 'array', message: '请上传图片', trigger: 'blur' }, { min: 2, message: '请至少上传2张图片', trigger: 'blur' }]
             },
             form: {
                 id: '',
@@ -172,8 +180,9 @@ export default {
                 supplement: '',
                 virtual_number: '',
                 real_number: '',
-                is_public: 2,
-                is_rented: 1,
+                // is_public: 2,
+                // is_rented: 1,
+                rent_status: '',
                 remarks: ''
             },
             // landlord: {
@@ -230,6 +239,7 @@ export default {
             this.$request.config().then(res => {
                 if (res.data) {
                     const config = res.data.reduce((obj, item) => {
+                        if (item.remark && item.remark === 'calculate') return obj;
                         if (!obj[item.type]) {
                             obj[item.type] = [];
                         }

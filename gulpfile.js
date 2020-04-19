@@ -9,7 +9,7 @@ gulp.task('default', function() {
             user: 'root',
             pass: 'Aa159168',
             // remotePath: '/home/wwwroot/housemanager.zhiqiang.ink/'
-            remotePath: '/home/wwwroot/housemanager/'
+            remotePath: '/home/wwwroot/housemanager.zhiqiang.ink/'
         })
     );
 });

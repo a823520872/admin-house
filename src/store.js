@@ -11,7 +11,8 @@ export default new Vuex.Store({
         userinfo: null,
         menu: '/',
         addr: null,
-        addrList: null
+        addrList: null,
+        area: null
     },
     mutations: {
         setVal(state, obj) {
@@ -35,6 +36,7 @@ export default new Vuex.Store({
                     if (res.data) {
                         const list = res.data;
                         let addrList = {};
+                        let areaList = [];
                         const addr = list.reduce((obj, item) => {
                             if (!item.pid) return obj;
                             addrList[item.id] = item;
@@ -53,12 +55,14 @@ export default new Vuex.Store({
                                     if (addr[li.id]) {
                                         li.children = addr[li.id].map(l => ({
                                             value: l.id,
-                                            label: l.name
+                                            label: l.name,
+                                            level: l.level
                                         }));
                                     }
                                     return {
                                         value: li.id,
                                         label: li.name,
+                                        level: li.level,
                                         children: li.children
                                     };
                                 });
@@ -67,6 +71,7 @@ export default new Vuex.Store({
                             return {
                                 value: item.id,
                                 label: item.name,
+                                level: item.level,
                                 children: item.children
                             };
                         });

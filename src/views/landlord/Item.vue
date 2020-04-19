@@ -1,29 +1,40 @@
 <template>
     <div class="action-box">
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="姓名">
-                <el-input v-model="form.name" prop="name"></el-input>
+        <page-header></page-header>
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+            <el-form-item label="姓名" prop="name">
+                <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="手机号">
-                <el-input v-model="form.mobile" prop="mobile"></el-input>
+            <el-form-item label="手机号" prop="mobile">
+                <el-input v-model="form.mobile"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="房源数量">
-                <el-input v-model.number="form.num" prop="num"></el-input>
-            </el-form-item> -->
-            <el-form-item label="房源位置" v-if="addr">
-                <el-cascader
-                    expand-trigger="hover"
-                    prop="postion_street"
-                    separator=" "
-                    :options="addr"
-                    v-model="selectedOptions"
-                    @change="handleChange"
-                ></el-cascader>
+            <el-form-item label="房源数量" prop="house_num">
+                <el-input v-model.number="form.house_num"></el-input>
             </el-form-item>
-            <el-form-item label="到期时间">
+            <el-form-item label="房源位置" v-if="addr" prop="postion_street">
+                <el-cascader expand-trigger="hover" separator=" " :options="addr" v-model="selectedOptions" @change="handleChange"></el-cascader>
+            </el-form-item>
+            <el-form-item label="推荐人" prop="referrer_user_mobile">
+                <el-input v-model="form.referrer_user_mobile"></el-input>
+            </el-form-item>
+            <el-form-item label="审核" prop="is_audit">
+                <el-radio-group v-model="form.is_audit">
+                    <el-radio :label="1">开通</el-radio>
+                    <el-radio :label="2">停止</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="认证房东" prop="is_auth">
+                <el-radio-group v-model="form.is_auth">
+                    <el-radio :label="1">是</el-radio>
+                    <el-radio :label="2">否</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="本次支付" prop="last_pay_amount">
+                <el-input v-model.number="form.last_pay_amount" placeholder="支付金额"></el-input>
+            </el-form-item>
+            <el-form-item label="本次服务时间" prop="indate_end">
                 <el-date-picker
                     v-model="timerange"
-                    prop="indate_end"
                     @change="timePicker"
                     type="daterange"
                     align="right"
@@ -33,9 +44,6 @@
                     end-placeholder="结束日期"
                     :picker-options="pickerOptions"
                 ></el-date-picker>
-            </el-form-item>
-            <el-form-item label="推荐人">
-                <el-input v-model="form.referrer_user_mobile"></el-input>
             </el-form-item>
             <el-form-item label="备注" prop="remarks">
                 <el-input v-model="form.remarks" type="textarea" :rows="3"></el-input>
@@ -51,9 +59,13 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import dayjs from 'dayjs';
+import PageHeader from '../../components/PageHeader';
 export default {
     computed: {
         ...mapState(['loading', 'addr'])
+    },
+    components: {
+        PageHeader
     },
     data() {
         return {
@@ -96,14 +108,18 @@ export default {
             rules: {
                 name: [{ required: true, message: '请输入房东姓名', trigger: 'blur' }],
                 mobile: [{ required: true, message: '请输入手机号码', trigger: 'blur' }],
-                num: [{ required: true, message: '请输入房源数量', trigger: 'blur' }],
+                house_num: [{ required: true, message: '请输入房源数量', trigger: 'blur' }],
                 postion_street: [{ required: true, message: '请选择房源地址', trigger: 'change' }],
-                indate_end: [{ required: true, message: '请选择到期时间', trigger: 'change' }]
+                indate_end: [{ required: true, message: '请选择到期时间', trigger: 'change' }],
+                is_audit: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
+                is_auth: [{ required: true, message: '请选择认证房东状态', trigger: 'change' }],
+                last_pay_amount: [{ required: true, message: '请选择本次支付金额', trigger: 'blur' }],
+                indate_end: [{ required: true, message: '请选择本次服务时间', trigger: 'change' }]
             },
             form: {
                 name: '',
                 mobile: '',
-                // num: '',
+                house_num: '',
                 position_province_id: '',
                 position_province: '',
                 position_city_id: '',
@@ -115,6 +131,9 @@ export default {
                 indate_begin: '',
                 indate_end: '',
                 referrer_user_mobile: '',
+                is_audit: 1,
+                is_auth: 1,
+                last_pay_amount: '',
                 remarks: ''
             },
             id: '',
@@ -138,14 +157,14 @@ export default {
                 })
                 .then(res => {
                     if (res.data) {
+                        let { indate_begin, indate_end, position_city_id, postion_district_id, postion_street_id } = res.data || {};
                         Object.keys(this.form).map(key => {
                             this.form[key] = res.data[key];
                         });
-                        if (res.data.indate_begin && res.data.indate_end) {
-                            this.timerange = [res.data.indate_begin, res.data.indate_end];
+                        if (indate_begin && indate_end) {
+                            this.timerange = [indate_begin, indate_end];
                         }
-                        // res.data.position_province_id,
-                        this.selectedOptions = [res.data.position_city_id, res.data.postion_district_id, res.data.postion_street_id];
+                        this.selectedOptions = [position_city_id, postion_district_id, postion_street_id];
                     }
                 });
         },
