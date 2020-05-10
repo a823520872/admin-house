@@ -3,7 +3,7 @@
         <div class="search el-row--flex is-justify-space-between">
             <el-form :inline="true">
                 <el-form-item>
-                    <el-input v-model="params.name" placeholder="村名"></el-input>
+                    <el-input v-model="params.area_street" placeholder="村名"></el-input>
                 </el-form-item>
                 <!-- <el-form-item v-if="addr">
                     <el-cascader
@@ -111,7 +111,7 @@ export default {
     data() {
         return {
             params: {
-                pid_area_district: ''
+                area_street: ''
             },
             pageParams: {
                 page: 1,
@@ -223,7 +223,7 @@ export default {
             this.$refs.form.validate(valid => {
                 if (!valid) return;
                 let url = this.form.id ? 'editStreet' : 'addStreet';
-                this.$request.addr[url]({ ...this.form }).then(res => {
+                this.$request.addr[url]({ ...this.form }).then(() => {
                     this.cancelAdd();
                     this.$message({
                         type: 'success',

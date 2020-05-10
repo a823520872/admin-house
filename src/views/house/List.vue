@@ -314,7 +314,7 @@ export default {
             if (item) {
                 this.form.ids = item.id + '';
             } else {
-                this.form.ids = this.selection.join('');
+                this.form.ids = this.selection.join(',');
             }
             this.form.rent_status = '平台下架';
             if (!this.form.ids) {

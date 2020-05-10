@@ -28,7 +28,7 @@
                     <el-select v-model="params.opening_status" placeholder="状态">
                         <!-- <el-option label="全部" value=""></el-option> -->
                         <el-option label="未开通" value="未开通"></el-option>
-                        <el-option label="已开通" value="已开通"></el-option>
+                        <el-option label="服务中" value="服务中"></el-option>
                         <el-option label="服务结束" value="服务结束"></el-option>
                     </el-select>
                 </el-form-item>
@@ -273,7 +273,7 @@ export default {
             this.timerange = [item.indate_begin, item.indate_end];
             this.dialogCheckVisible = true;
         },
-        cancelCheck(name) {
+        cancelCheck() {
             this.dialogCheckVisible = false;
             this.form = {
                 id: '',
@@ -288,7 +288,7 @@ export default {
             this.$refs[name].validate(valid => {
                 if (!valid) return;
                 const data = { ...this.form };
-                this.$request.landlord.check(data).then(res => {
+                this.$request.landlord.check(data).then(() => {
                     this.$message({
                         type: 'success',
                         message: '操作成功!'
@@ -299,7 +299,7 @@ export default {
             });
         },
         handleOpen(item) {
-            this.$request.landlord.getOpenList({ id: item.id }).then(res => {
+            this.$request.landlord.getOpenList({ landlord_id: item.id }).then(res => {
                 const {
                     data: { count, data, page }
                 } = res;

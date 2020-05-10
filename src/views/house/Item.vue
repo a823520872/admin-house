@@ -256,11 +256,11 @@ export default {
             });
         },
         getAreaFlag() {
-            this.$request.addr.flag({ pid_area_street: this.form.address_street_id }).then(res => {
+            this.$request.addr.allFlag({ pid_area_street: this.form.address_street_id }).then(res => {
                 if (res.data) {
                     this.config = {
                         ...this.config,
-                        address_flag: res.data.map(item => {
+                        address_flag: (res.data || []).map(item => {
                             return {
                                 value: item.id,
                                 label: item.shortname

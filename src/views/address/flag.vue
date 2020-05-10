@@ -3,7 +3,13 @@
         <div class="search el-row--flex is-justify-space-between">
             <el-form :inline="true">
                 <el-form-item>
-                    <el-input v-model="params.name" placeholder="村名"></el-input>
+                    <el-input v-model="params.area_district" placeholder="区"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="params.area_street" placeholder="村名"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="params.shortname" placeholder="标志建筑"></el-input>
                 </el-form-item>
                 <!-- <el-form-item v-if="addr">
                     <el-cascader
@@ -110,7 +116,9 @@ export default {
     data() {
         return {
             params: {
-                pid_area_district: ''
+                area_district: '',
+                area_street: '',
+                shortname: ''
             },
             pageParams: {
                 page: 1,
@@ -221,6 +229,7 @@ export default {
                 lat: '',
                 level: 5
             };
+            this.selectedOptions2 = [];
             this.dialogAddFlagVisible = true;
         },
         cancelAdd() {
@@ -240,7 +249,7 @@ export default {
             this.$refs.form.validate(valid => {
                 if (!valid) return;
                 let url = this.form.id ? 'editFlag' : 'addFlag';
-                this.$request.addr[url]({ ...this.form }).then(res => {
+                this.$request.addr[url]({ ...this.form }).then(() => {
                     this.cancelAdd();
                     this.$message({
                         type: 'success',

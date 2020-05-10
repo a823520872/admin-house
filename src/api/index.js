@@ -73,6 +73,9 @@ export default {
         delStreet(params = {}) {
             return ajax('/api/admin/Area_Street/del', params, { type: 'post' });
         },
+        allFlag(params = {}) {
+            return ajax('/api/admin/area_flag/getAllList', params, { type: 'get' });
+        },
         flag(params) {
             return ajax('/api/admin/area_flag/getList', params, { type: 'get' });
         },
