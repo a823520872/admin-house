@@ -11,6 +11,13 @@
                 <el-form-item>
                     <el-input v-model="params.shortname" placeholder="标志建筑"></el-input>
                 </el-form-item>
+                <el-form-item>
+                    <el-select v-model="params.status" placeholder="状态">
+                        <!-- <el-option label="全部" value=""></el-option> -->
+                        <el-option label="正在使用" value="1"></el-option>
+                        <el-option label="已删除" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
                 <!-- <el-form-item v-if="addr">
                     <el-cascader
                         placeholder="所属区域"
@@ -56,6 +63,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="shortname" label="标志建筑" min-width="80"></el-table-column>
+                <el-table-column prop="status" label="状态" width="80">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status === 1">正在使用</span>
+                        <span class="danger" v-if="scope.row.status === 2">已删除</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="num_house_resource" label="房源数量" width="80"></el-table-column>
                 <el-table-column prop="num_getphone_number" label="获得电话次数" width="110"></el-table-column>
                 <el-table-column prop="num_getphone_people" label="获得电话人数" width="110"></el-table-column>
@@ -63,7 +76,7 @@
                 <el-table-column label="操作" width="160">
                     <template slot-scope="scope">
                         <el-button size="small" @click="handleLink(scope.row)">编辑</el-button>
-                        <el-button size="small" type="danger" @click="handleDel(scope.row)">删除</el-button>
+                        <el-button size="small" type="danger" @click="handleDel(scope.row)" v-if="scope.row.status === 1">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -118,7 +131,8 @@ export default {
             params: {
                 area_district: '',
                 area_street: '',
-                shortname: ''
+                shortname: '',
+                status: '',
             },
             pageParams: {
                 page: 1,
@@ -211,6 +225,7 @@ export default {
                         id: item.id
                     })
                     .then(() => {
+                        this.getArea(true)
                         this.$message({
                             type: 'success',
                             message: '操作成功!'
@@ -250,6 +265,7 @@ export default {
                 if (!valid) return;
                 let url = this.form.id ? 'editFlag' : 'addFlag';
                 this.$request.addr[url]({ ...this.form }).then(() => {
+                    this.getArea(true)
                     this.cancelAdd();
                     this.$message({
                         type: 'success',

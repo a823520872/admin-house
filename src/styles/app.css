@@ -30,6 +30,8 @@ a {
     color: inherit;
 }
 
+.danger { color:#f56c6c; }
+
 .close {
     position: absolute;
     top: 0;

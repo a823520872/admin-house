@@ -29,8 +29,8 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        getArea(context) {
-            if (context.state.addr) return Promise.resolve();
+        getArea(context, flag) {
+            if (!flag && context.state.addr) return Promise.resolve();
             return new Promise((resolve, reject) => {
                 api.addr.area({}).then(res => {
                     if (res.data) {
