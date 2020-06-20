@@ -109,7 +109,7 @@ export default {
                 name: [{ required: true, message: '请输入房东姓名', trigger: 'blur' }],
                 mobile: [{ required: true, message: '请输入手机号码', trigger: 'blur' }],
                 house_num: [{ required: true, message: '请输入房源数量', trigger: 'blur' }],
-                postion_street: [{ required: true, message: '请选择房源地址', trigger: 'change' }],
+                postion_street_id: [{ required: true, message: '请选择房源地址', trigger: 'change' }],
                 indate_end: [{ required: true, message: '请选择到期时间', trigger: 'change' }],
                 is_audit: [{ required: true, message: '请选择审核状态', trigger: 'change' }],
                 is_auth: [{ required: true, message: '请选择认证房东状态', trigger: 'change' }],
