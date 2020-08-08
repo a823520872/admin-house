@@ -108,7 +108,15 @@ const routes = new Router({
                         keepAlive: true,
                         _menu: '/address/flag'
                     }
-                }
+                },
+                {
+                    path: 'metro',
+                    component: () => import(/* webpackChunkName: "metro" */ './views/address/metro.vue'),
+                    meta: {
+                        keepAlive: true,
+                        _menu: '/address/metro'
+                    }
+                },
             ]
         },
         {

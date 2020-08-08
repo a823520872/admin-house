@@ -52,7 +52,11 @@ export default {
                         {
                             path: '/address/flag',
                             name: '标志建筑'
-                        }
+                        },
+                        {
+                            path: '/address/metro',
+                            name: '地铁'
+                        },
                     ]
                 },
                 {

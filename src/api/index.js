@@ -87,7 +87,13 @@ export default {
         },
         delFlag(params = {}) {
             return ajax('/api/admin/Area_Flag/del', params, { type: 'post' });
-        }
+        },
+        metro(params = {}) {
+            return ajax('/api/admin/metro/getList', params, { type: 'get' });
+        },
+        editMetro(params = {}) {
+            return ajax('/api/admin/metro/Edit', params, { type: 'post' });
+        },
     },
     statistics: {
         list(params = {}) {

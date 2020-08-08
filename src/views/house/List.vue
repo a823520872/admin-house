@@ -76,7 +76,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="address_detail" label="具体位置" min-width="80"></el-table-column>
-                <el-table-column prop="create_t" label="发布时间" width="110"></el-table-column>
+                <el-table-column label="创建时间" width="110">
+                    <template slot-scope="scope">
+                        {{ scope.row.createtime | timeFilter }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="real_number" label="真实阅读量" width="80"></el-table-column>
                 <el-table-column prop="getphone_number" label="获取联系方式" width="120"></el-table-column>
                 <el-table-column prop="refresh_number" label="刷新次数" width="80"></el-table-column>
@@ -219,10 +223,7 @@ export default {
                     } = res;
                     this.pageParams.page = +page;
                     this.pageParams.count = +count;
-                    this.data = data.map(item => {
-                        item.create_t = dayjs(new Date(item.createtime * 1000)).format('YYYY-MM-DD HH:mm:ss');
-                        return item;
-                    });
+                    this.data = data
                 });
         },
         handleSubmit() {

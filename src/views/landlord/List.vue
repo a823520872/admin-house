@@ -74,7 +74,11 @@
                 <el-table-column prop="indate_end" label="服务结束时间" width="110"></el-table-column>
                 <el-table-column prop="last_opentime" label="上次开通时间" width="110"></el-table-column>
                 <el-table-column prop="remarks" label="备注" width="80"></el-table-column>
-                <el-table-column prop="create_t" label="申请时间" width="110"></el-table-column>
+                <el-table-column label="申请时间" width="110">
+                    <template slot-scope="scope">
+                        {{ scope.row.createtime | timeFilter }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="400">
                     <template slot-scope="scope">
                         <el-button size="small" type="warning" @click="handleCheck(scope.row)">审核</el-button>
@@ -246,10 +250,7 @@ export default {
                     } = res;
                     this.pageParams.page = +page;
                     this.pageParams.count = +count;
-                    this.data = data.map(item => {
-                        item.create_t = dayjs(new Date(item.createtime * 1000)).format('YYYY-MM-DD HH:mm:ss');
-                        return item;
-                    });
+                    this.data = data
                 });
         },
         handleSubmit() {

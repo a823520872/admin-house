@@ -1,3 +1,5 @@
+
+import dayjs from 'dayjs';
 const mixin = {
     data() {
         return {
@@ -8,7 +10,12 @@ const mixin = {
         back() {
             this.$router.go(-1);
         }
-    }
+    },
+    filters: {
+        timeFilter(v) {
+            return v ? dayjs(new Date(v * 1000)).format('YYYY-MM-DD HH:mm:ss') : '/';
+        },
+    },
 };
 
 export default mixin;

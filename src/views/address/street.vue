@@ -62,7 +62,11 @@
                 <el-table-column prop="num_house_resource" label="房源数量" width="80"></el-table-column>
                 <el-table-column prop="num_getphone_number" label="获得电话次数" width="110"></el-table-column>
                 <el-table-column prop="num_getphone_people" label="获得电话人数" width="110"></el-table-column>
-                <el-table-column prop="create_t" label="创建时间" width="110"></el-table-column>
+                <el-table-column label="创建时间" width="110">
+                    <template slot-scope="scope">
+                        {{ scope.row.createtime | timeFilter }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="160">
                     <template slot-scope="scope">
                         <el-button size="small" @click="handleLink(scope.row)">编辑</el-button>
@@ -105,7 +109,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import dayjs from 'dayjs';
 export default {
     computed: {
         ...mapState(['loading', 'addr', 'addrList']),
@@ -166,10 +169,7 @@ export default {
                     } = res;
                     this.pageParams.page = +page;
                     this.pageParams.count = +count;
-                    this.data = data.map(item => {
-                        item.create_t = item.createtime ? dayjs(new Date(item.createtime * 1000)).format('YYYY-MM-DD HH:mm:ss') : '/';
-                        return item;
-                    });
+                    this.data = data
                 });
         },
         handleSubmit() {
