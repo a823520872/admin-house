@@ -3,7 +3,7 @@
         <div class="search el-row--flex is-justify-space-between">
             <el-form :inline="true">
                 <el-form-item>
-                    <el-input v-model="params.area_street" placeholder="村名"></el-input>
+                    <el-input v-model="params.area_street" placeholder="地址"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="params.status" placeholder="状态">
@@ -40,7 +40,7 @@
                 </el-form-item>
             </el-form>
             <div>
-                <el-button type="primary" @click="addStreet()">添加村</el-button>
+                <el-button type="primary" @click="addJiedao()">添加街道</el-button>
             </div>
         </div>
         <div class="table">
@@ -51,7 +51,7 @@
                         {{ getCity(scope.row.pid_area_district) }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" label="村名" min-width="80"></el-table-column>
+                <el-table-column prop="name" label="区域" min-width="80"></el-table-column>
                 <el-table-column prop="status" label="状态" width="80">
                     <template slot-scope="scope">
                         <span v-if="scope.row.status === 1">正在使用</span>
@@ -83,11 +83,11 @@
                 ></el-pagination>
             </div>
         </div>
-        <el-dialog :title="form && form.id ? '编辑村' : '添加村'" :visible.sync="dialogAddStreetVisible" width="320px">
+        <el-dialog :title="form && form.id ? '编辑街道' : '添加街道'" :visible.sync="dialogAddJiedaoVisible" width="320px">
             <el-form :model="form" :rules="ruleForm" ref="form" label-width="80px">
-                <el-form-item v-if="addr" label="所属区域" prop="pid_area_id">
+                <el-form-item v-if="addr" label="所属区域" prop="pid_area_district">
                     <el-cascader
-                        placeholder="所属区域"
+                        placeholder="所属区"
                         expand-trigger="hover"
                         separator=" "
                         :options="district"
@@ -95,8 +95,14 @@
                         @change="handleChange2"
                     ></el-cascader>
                 </el-form-item>
-                <el-form-item label="村名称" prop="name">
-                    <el-input v-model.trim="form.name" placeholder="请输入村名"></el-input>
+                <el-form-item label="区域名称" prop="name">
+                    <el-input v-model.trim="form.name" placeholder="请输入街道名"></el-input>
+                </el-form-item>
+                <el-form-item label="显示状态" prop="status" required>
+                    <el-radio-group v-model="form.status">
+                        <el-radio :label="1">显示</el-radio>
+                        <el-radio :label="2">隐藏</el-radio>
+                    </el-radio-group>
                 </el-form-item>
             </el-form>
             <div class="dialog-footer" slot="footer">
@@ -139,13 +145,14 @@ export default {
             selectedOptions2: [],
             data: null,
             form: {
-                pid_area_id: '',
+                pid_area_district: '',
                 name: '',
-                level: 4
+                level: 4,
+                status: 1,
             },
-            dialogAddStreetVisible: false,
+            dialogAddJiedaoVisible: false,
             ruleForm: {
-                pid_area_id: [{ required: true, message: '请选择区域', trigger: 'change' }],
+                pid_area_district: [{ required: true, message: '请选择区域', trigger: 'change' }],
                 name: [{ required: true, message: '请输入村名', trigger: 'blur' }]
             }
         };
@@ -158,7 +165,7 @@ export default {
         ...mapActions(['getArea']),
         getData() {
             this.$request.addr
-                .street({
+                .jiedao({
                     page: this.pageParams.page,
                     page_size: this.pageParams.pageSize,
                     ...this.params
@@ -189,13 +196,14 @@ export default {
         handleLink(item) {
             this.form = {
                 id: item.id,
-                pid_area_id: item.pid_area_district,
-                name: item.name
+                pid_area_district: item.pid_area_district,
+                name: item.name,
+                status: item.status,
             };
             if (item.pid_area_district) {
                 this.selectedOptions2 = [this.addrList[item.pid_area_district].pid, item.pid_area_district];
             }
-            this.dialogAddStreetVisible = true;
+            this.dialogAddJiedaoVisible = true;
         },
         handleDel(item) {
             this.$confirm('确认删除该条信息？', '提示', {
@@ -204,7 +212,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.$request.addr
-                    .delStreet({
+                    .delJiedao({
                         id: item.id
                     })
                     .then(() => {
@@ -217,28 +225,28 @@ export default {
                     });
             });
         },
-        addStreet() {
+        addJiedao() {
             this.form = {
-                pid_area_id: '',
+                pid_area_district: '',
                 name: '',
                 level: 4,
-                // status: 1
+                status: 1,
             };
-            this.dialogAddStreetVisible = true;
+            this.dialogAddJiedaoVisible = true;
         },
         cancelAdd() {
-            this.dialogAddStreetVisible = false;
+            this.dialogAddJiedaoVisible = false;
             this.form = {
-                pid_area_id: '',
+                pid_area_district: '',
                 name: '',
                 level: 4,
-                // status: 1
+                status: 1,
             };
         },
         add() {
             this.$refs.form.validate(valid => {
                 if (!valid) return;
-                let url = this.form.id ? 'editStreet' : 'addStreet';
+                let url = this.form.id ? 'editJiedao' : 'addJiedao';
                 this.$request.addr[url]({ ...this.form }).then(() => {
                     this.getArea(true)
                     this.cancelAdd();

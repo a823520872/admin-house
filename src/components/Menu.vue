@@ -54,6 +54,10 @@ export default {
                             name: '标志建筑'
                         },
                         {
+                            path: '/address/jiedao',
+                            name: '区域'
+                        },
+                        {
                             path: '/address/metro',
                             name: '地铁'
                         },

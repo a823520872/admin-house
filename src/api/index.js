@@ -73,6 +73,18 @@ export default {
         delStreet(params = {}) {
             return ajax('/api/admin/Area_Street/del', params, { type: 'post' });
         },
+        jiedao(params = {}) {
+            return ajax('/api/admin/Area_Jiedao/getList', params, { type: 'get' });
+        },
+        addJiedao(params = {}) {
+            return ajax('/api/admin/Area_Jiedao/add', params, { type: 'post' });
+        },
+        editJiedao(params = {}) {
+            return ajax('/api/admin/Area_Jiedao/edit', params, { type: 'post' });
+        },
+        delJiedao(params = {}) {
+            return ajax('/api/admin/Area_Jiedao/del', params, { type: 'post' });
+        },
         allFlag(params = {}) {
             return ajax('/api/admin/area_flag/getAllList', params, { type: 'get' });
         },

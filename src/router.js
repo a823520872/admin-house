@@ -110,6 +110,14 @@ const routes = new Router({
                     }
                 },
                 {
+                    path: 'jiedao',
+                    component: () => import(/* webpackChunkName: "jiedao" */ './views/address/jiedao.vue'),
+                    meta: {
+                        keepAlive: true,
+                        _menu: '/address/jiedao'
+                    }
+                },
+                {
                     path: 'metro',
                     component: () => import(/* webpackChunkName: "metro" */ './views/address/metro.vue'),
                     meta: {
