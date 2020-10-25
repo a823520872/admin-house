@@ -139,13 +139,13 @@ export default {
             selectedOptions2: [],
             data: null,
             form: {
-                pid_area_id: '',
+                pid_area_district: '',
                 name: '',
                 level: 4
             },
             dialogAddStreetVisible: false,
             ruleForm: {
-                pid_area_id: [{ required: true, message: '请选择区域', trigger: 'change' }],
+                pid_area_district: [{ required: true, message: '请选择区域', trigger: 'change' }],
                 name: [{ required: true, message: '请输入村名', trigger: 'blur' }]
             }
         };
@@ -189,7 +189,7 @@ export default {
         handleLink(item) {
             this.form = {
                 id: item.id,
-                pid_area_id: item.pid_area_district,
+                pid_area_district: item.pid_area_district,
                 name: item.name
             };
             if (item.pid_area_district) {
@@ -219,7 +219,7 @@ export default {
         },
         addStreet() {
             this.form = {
-                pid_area_id: '',
+                pid_area_district: '',
                 name: '',
                 level: 4,
                 // status: 1
@@ -229,7 +229,7 @@ export default {
         cancelAdd() {
             this.dialogAddStreetVisible = false;
             this.form = {
-                pid_area_id: '',
+                pid_area_district: '',
                 name: '',
                 level: 4,
                 // status: 1
