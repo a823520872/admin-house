@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const ftp = require('gulp-ftp');
+var gutil = require('gulp-util');
 
 gulp.task('default', function() {
     return gulp.src('./dist/**/*').pipe(
@@ -11,5 +12,6 @@ gulp.task('default', function() {
             // remotePath: '/home/wwwroot/housemanager.zhiqiang.ink/'
             remotePath: '/home/wwwroot/housemanager.zhiqiang.ink/'
         })
+		.pipe(gutil.noop())
     );
 });
